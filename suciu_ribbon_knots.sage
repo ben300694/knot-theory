@@ -18,17 +18,20 @@ k = 7
 F.<t_k, c, d> = FreeGroup()
 
 # G is the group of the complement S^4 - R_k
-
-G = F / [d^(-1)*t_k*(d*c^(-1))^(-k+1)*t_k*(d*c^(-1))^(k-1)*(t_k^(-1)), c^(-1)*t_k*c*d^(-1)*(t_k)^(-1)*d*t_k*d*c^(-1)*(t_k)^(-1)]
+def G(k=2):
+    return F / [d^(-1)*t_k*(d*c^(-1))^(-k+1)*t_k*(d*c^(-1))^(k-1)*(t_k^(-1)),
+                c^(-1)*t_k*c*d^(-1)*(t_k)^(-1)*d*t_k*d*c^(-1)*(t_k)^(-1)]
 
 # Passing to the associated RP^2-knot
 # by making the meridian have order 2
-
+def RPG(k=2):
+    return F / [d^(-1)*t_k*(d*c^(-1))^(-k+1)*t_k*(d*c^(-1))^(k-1)*(t_k^(-1)), 
+                c^(-1)*t_k*c*d^(-1)*(t_k)^(-1)*d*t_k*d*c^(-1)*(t_k)^(-1), 
+                t_k^2]
+# Can identify this groups as
 # pi_1(R_k # RP^2) 
 # \cong pi_1(Double Branched Cover(R_k)) semidirect product Z/2
-
-RPG = F / [d^(-1)*t_k*(d*c^(-1))^(-k+1)*t_k*(d*c^(-1))^(k-1)*(t_k^(-1)), c^(-1)*t_k*c*d^(-1)*(t_k)^(-1)*d*t_k*d*c^(-1)*(t_k)^(-1), t_k^2]
-
+#
 # The groups are finite for k=2 and k=3
 # RPG.order()
 # List elements of group:
@@ -36,18 +39,19 @@ RPG = F / [d^(-1)*t_k*(d*c^(-1))^(-k+1)*t_k*(d*c^(-1))^(k-1)*(t_k^(-1)), c^(-1)*
 # Descriptive name for group:
 # RPG.gap().StructureDescription()
 
-
 def commutator(a, b):
     return a*b*a^(-1)*b^(-1)
 
-# w is the guiding arc of the finger move
+# Testing w as the guiding arc of the finger move
 w = d
 rel = commutator(t_k, w^(-1)*t_k*w)
+quotient = F / [d^(-1)*t_k*(d*c^(-1))^(-k+1)*t_k*(d*c^(-1))^(k-1)*(t_k^(-1)), 
+                c^(-1)*t_k*c*d^(-1)*(t_k)^(-1)*d*t_k*d*c^(-1)*(t_k)^(-1), 
+                t_k^2,
+                rel]
 
-quotient = F / [d^(-1)*t_k*(d*c^(-1))^(-k+1)*t_k*(d*c^(-1))^(k-1)*(t_k^(-1)), c^(-1)*t_k*c*d^(-1)*(t_k)^(-1)*d*t_k*d*c^(-1)*(t_k)^(-1), t_k^2, rel]
-
-quotient.cardinality()
-quotient.gap().StructureDescription()
+# quotient.cardinality()
+# quotient.gap().StructureDescription()
 
 # Unfortunately, the following appears to be the case:
 #
@@ -73,17 +77,51 @@ quotient.gap().StructureDescription()
 # Alexander polynomials
 # # # # # # # # # # # # #
 
-fox_matrix = G.alexander_matrix()
-
 R.<t> = LaurentPolynomialRing(ZZ)
 # if something (like taking determinants) is not implemented in Sage for Laurent Polynomials
 # can try to use polynomial ring instead
 # R.<t>=PolynomialRing(ZZ)
 # https://levitopher.wordpress.com/2017/08/01/knot-theory-on-sage/
 
-alex_matrix = G.alexander_matrix([t,t,t])
-alex_poly = gcd(alex_matrix.minors(G.ngens() - 1))
+fox_matrix = G(k).alexander_matrix()
+alex_matrix = G(k).alexander_matrix([t,t,t])
+alex_poly = gcd(alex_matrix.minors(G(k).ngens() - 1))
 
+def alexander_ideal(Group):
+    alex_matrix = Group.alexander_matrix([t]*Group.ngens())
+    print("----------------------")
+    print("Alexander matrix:")
+    print(alex_matrix)
+    print("----------------------")
+    return alex_matrix.minors(Group.ngens() - 1)
 
+# # # # # # # # # # # # # # # # # # # # # # # # #
+# Checking all possible finger move relations
+# [t_k, w^(-1)*t_k*w]
+# for the RP^2 knots in the cases
+# k=2 and k=3 where the group is finite
+# # # # # # # # # # # # # # # # # # # # # # # # #
 
-
+def check_all_finger_move_relations(k=2):
+    Group = RPG(k)
+    print("k = ", k)
+    print("Checking quotients of group", Group)
+    for w in Group.gap().Elements():
+        print("=====================================")
+        print("Taking group element", w)
+        # Use RPG(x) to convert word x in the free group F to GAP object element in RPG
+        # Use F(y) to convert GAP object y to word in the free group F
+        rel = F(commutator(Group(t_k), Group(w)^(-1)*Group(t_k)*Group(w)))
+        print("Checking quotient after relation", rel)
+        RPGQuotient = F / [d^(-1)*t_k*(d*c^(-1))^(-k+1)*t_k*(d*c^(-1))^(k-1)*(t_k^(-1)),
+                           c^(-1)*t_k*c*d^(-1)*(t_k)^(-1)*d*t_k*d*c^(-1)*(t_k)^(-1), 
+                           t_k^2,
+                           rel]
+        print("Cardinality of the quotient =", RPGQuotient.cardinality())
+        Quotient = F / [d^(-1)*t_k*(d*c^(-1))^(-k+1)*t_k*(d*c^(-1))^(k-1)*(t_k^(-1)),
+                        c^(-1)*t_k*c*d^(-1)*(t_k)^(-1)*d*t_k*d*c^(-1)*(t_k)^(-1), 
+                        rel]
+        alex_ideal = alexander_ideal(Quotient)
+        print("Alexander ideal:")
+        print(alex_ideal)
+    return
