@@ -42,16 +42,33 @@ def RPG(k=2):
 def commutator(a, b):
     return a*b*a^(-1)*b^(-1)
 
+# Words of the ribbon bands
+def w_1(k):
+    return t_k*(d*c^(-1))^(-k+1)
+# Comment: w_2 does not depend on k
+def w_2(k):
+    return t_k*c*d^(-1)*(t_k)^(-1)
+
+
 # Testing w as the guiding arc of the finger move
 w = d
 rel = commutator(t_k, w^(-1)*t_k*w)
-quotient = F / [d^(-1)*t_k*(d*c^(-1))^(-k+1)*t_k*(d*c^(-1))^(k-1)*(t_k^(-1)), 
+FM_quotient = F / [d^(-1)*t_k*(d*c^(-1))^(-k+1)*t_k*(d*c^(-1))^(k-1)*(t_k^(-1)), 
                 c^(-1)*t_k*c*d^(-1)*(t_k)^(-1)*d*t_k*d*c^(-1)*(t_k)^(-1), 
                 t_k^2,
                 rel]
 
 # quotient.cardinality()
 # quotient.gap().StructureDescription()
+
+
+# Function for defining quotients of G
+def G_quotient_by_relation(k=2, relation=commutator(c, d)):
+    return F / [d^(-1)*t_k*(d*c^(-1))^(-k+1)*t_k*(d*c^(-1))^(k-1)*(t_k^(-1)),
+                c^(-1)*t_k*c*d^(-1)*(t_k)^(-1)*d*t_k*d*c^(-1)*(t_k)^(-1),
+                relation]
+
+
 
 # Unfortunately, the following appears to be the case:
 #
