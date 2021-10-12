@@ -62,10 +62,17 @@ FM_quotient = F / [d^(-1)*t_k*(d*c^(-1))^(-k+1)*t_k*(d*c^(-1))^(k-1)*(t_k^(-1)),
 # quotient.gap().StructureDescription()
 
 
-# Function for defining quotients of G
+# Function for defining quotients of G(k)
 def G_quotient_by_relation(k=2, relation=commutator(c, d)):
     return F / [d^(-1)*t_k*(d*c^(-1))^(-k+1)*t_k*(d*c^(-1))^(k-1)*(t_k^(-1)),
                 c^(-1)*t_k*c*d^(-1)*(t_k)^(-1)*d*t_k*d*c^(-1)*(t_k)^(-1),
+                relation]
+
+# Function for defining quotients of RPG(k)
+def RPG_quotient_by_relation(k=2, relation=commutator(c, d)):
+    return F / [d^(-1)*t_k*(d*c^(-1))^(-k+1)*t_k*(d*c^(-1))^(k-1)*(t_k^(-1)),
+                c^(-1)*t_k*c*d^(-1)*(t_k)^(-1)*d*t_k*d*c^(-1)*(t_k)^(-1),
+                t_k^(2),
                 relation]
 
 
