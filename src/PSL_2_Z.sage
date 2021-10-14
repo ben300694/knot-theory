@@ -37,7 +37,6 @@ def d(k):
 
 T_Free.<a, b> = FreeGroup()
 
-
 # t = b^(-1)*a
 # u = t^(-1)*x
 #   = a^(-1)*b*a*b^(-1)
@@ -47,18 +46,31 @@ T_Free.<a, b> = FreeGroup()
 # Plugging this into commutator(c,d) to write it in terms of a, b
 def rel_ab(k):
     return commutator(c(k),d(k))(b^(-1)*a, a^(-1)*b*a*b^(-1), a*b^(-1)*a^(-1)*b)
+    
+def rel_ab_manual(k):
+    return b^(-1)*a*(a^(-1)*b*a*b^(-1))^(k+1)*b^(-1)*a*b*a^(-1)*(a^(-1)*b*a*b^(-1))^(-k+1)*a^(-1)*b*(a^(-1)*b*a*b^(-1))^(-1)
 
+# Presentation of trefoil knot group from genus 1 Heegaard splitting
+Trefoil = T_Free / [a^2*b^(-3)]
+
+# Quotient of trefoil knot group by the image of commutator(c, d)
+def Trefoil_quotient(k):
+    return T_Free / [a^2*b^(-3), rel_ab(k)]
+    
+# Trefoil_quotient(1) is abelian and isomorphic to Z
+# Trefoil_quotient(2) is abelian and isomorphic to Z
+# 
 
 P_Free.<A, B> = FreeGroup()
-
 PSL_2_Z = P_Free / [A^2, B^3]
 
-def quotient(k):
+# Quotient of PSL(2,Z) by the image of commutator(c, d)
+def PSL_2_Z_quotient(k):
     return P_Free / [A^2, B^3, rel_ab(k)(A,B)]
 
 def run_test():
     for k in range(2, 12):
-        Test = quotient(k)
+        Test = PSL_2_Z_quotient(k)
         print("-----------------")
         print(Test)
         print("Order:", Test.cardinality())
