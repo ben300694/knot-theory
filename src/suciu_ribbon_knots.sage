@@ -12,6 +12,10 @@
 from sage.interfaces.gap import get_gap_memory_pool_size, set_gap_memory_pool_size
 set_gap_memory_pool_size(20000000000)
 
+def commutator(a, b):
+    return a*b*a^(-1)*b^(-1)
+
+
 # k in NN is the parameter for Suciu's family R_k
 k = 7
 
@@ -38,9 +42,6 @@ def RPG(k=2):
 # RPG.gap().Elements()
 # Descriptive name for group:
 # RPG.gap().StructureDescription()
-
-def commutator(a, b):
-    return a*b*a^(-1)*b^(-1)
 
 # Words of the ribbon bands
 def w_1(k):
