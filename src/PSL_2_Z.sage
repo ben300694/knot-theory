@@ -60,6 +60,18 @@ def Trefoil_quotient(k):
 # Trefoil_quotient(1) is abelian and isomorphic to Z
 # Trefoil_quotient(2) is abelian and isomorphic to Z
 # 
+# after running my Samsung laptop through the night:
+# Exiting Sage (CPU time 822m42.51s, Wall time 1276m55.96s).
+# Trefoil_quotient(3) is abelian and isomorphic to Z
+#
+# Also confirmed that the quotient is abelian in the following way
+# Exiting Sage (CPU time 818m21.67s, Wall time 1167m18.18s).
+# Test=Trefoil_quotient(3)
+# Test(a*b*a^(-1)*b^(-1))==Test(1)
+# sage: True
+#
+# checking Trefoil_quotient(4).gap().StructureDescription() at MPIM
+
 
 P_Free.<A, B> = FreeGroup()
 PSL_2_Z = P_Free / [A^2, B^3]
