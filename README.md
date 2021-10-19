@@ -1,6 +1,13 @@
 # knot-theory
-Code related to low-dimensional topology
+SageMath and GAP code related to low-dimensional topology
 
+In particular, we study the
+[Casson-Whitney unknotting number](https://arxiv.org/abs/2007.13244)
+via lower bounds from the fundamental group of the complement.
+
+This is applied to
+[Suciu's infinite family of ribbon 2-knots](https://doi.org/10.1017/S0305004100063684)
+with the trefoil knot group.
 
 
 ## Using SageMath from docker image
