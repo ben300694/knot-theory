@@ -1,0 +1,30 @@
+sage: attach('src/suciu_ribbon_knots.sage')
+sage: Test=G_quotient_by_relation(4, commutator(d,c))
+sage: Test
+Finitely presented group < t_k, c, d | d^-1*t_k*(c*d^-1)^3*t_k*(d*c^-1)^3*t_k^-1, c^-1*t_k*c*d^-1*t_k^-1*d*t_k*d*c^-1*t_k^-1, d*c*d^-1*c^-1 >
+sage: Test.order()
++Infinity
+sage: Test.gap().StructureDescription()
+KeyboardInterrupt [used up more than 80% of my Samsung laptop RAM]
+Exiting Sage (CPU time 851m45.98s, Wall time 847m22.29s).
+
+# # # # # # # # # # # # # # # # #
+
+
+
+sage: attach('src/suciu_ribbon_knots.sage')
+sage: F
+Free Group on generators {t_k, c, d}
+sage: G(3)
+Finitely presented group < t_k, c, d | d^-1*t_k*(c*d^-1)^2*t_k*(d*c^-1)^2*t_k^-1, c^-1*t_k*c*d^-1*t_k^-1*d*t_k*d*c^-1*t_k^-1 >
+sage: k=3
+sage: Test = F / [c^-1*t_k*c*d^-1*t_k^-1*d*t_k*d*c^-1*t_k^-1, commutator(c,d)]
+sage: Test
+Finitely presented group < t_k, c, d | c^-1*t_k*c*d^-1*t_k^-1*d*t_k*d*c^-1*t_k^-1, c*d*c^-1*d^-1 >
+sage: Test.order()
++Infinity
+sage: Test.gap().StructureDescription()
+KeyboardInterrupt [used up more than 75% of my Samsung laptop RAM]
+Exiting Sage (CPU time 1952m8.68s, Wall time 1941m28.57s).
+
+
