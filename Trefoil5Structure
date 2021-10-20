@@ -1,0 +1,18 @@
+# IPython log file
+
+# Wed, 20 Oct 2021 14:12:21
+attach('src/PSL_2_Z.sage')
+# Wed, 20 Oct 2021 14:12:21
+sage.repl.load.load(sage.repl.load.base64.b64decode("c3JjL1BTTF8yX1ouc2FnZQ=="),globals(),True)
+# Wed, 20 Oct 2021 14:12:25
+k=Integer(5)
+# Wed, 20 Oct 2021 14:12:39
+Test=Trefoil_quotient(Integer(5))
+# Wed, 20 Oct 2021 14:12:40
+Test
+#[Out]# Finitely presented group < a, b | a^2*b^-3, (a*b^-1*a^-1*b)^5*a*b^-2*a*b*a^-1*(b*a^-1*b^-1*a)^3*(b*a^-1)^2*b^-1*a >
+# Wed, 20 Oct 2021 14:12:47
+Test.order()
+#[Out]# +Infinity
+# Wed, 20 Oct 2021 14:12:57
+Test.gap().StructureDescription()

@@ -28,3 +28,27 @@ GAP finitely presented groups through SageMath:
 
 Projective Special Linear Group:
 (https://groupprops.subwiki.org/wiki/Projective_special_linear_group:PSL(2,Z))
+
+
+## Logging Sage output and keeping processes running over ssh
+
+
+
+(https://askubuntu.com/questions/8653/how-to-keep-processes-running-after-ending-ssh-session)
+Start `tmux`
+
+Start process in the tmux session:
+
+(https://doc.sagemath.org/html/en/tutorial/interactive_shell.html)
+In SageMath, activate logging with
+`logstart -o -t Trefoil4commutator`
+Options: `-o` to also log output, `-t` for timestamps,
+can give any other name instead of 'Trefoil4commutator'
+
+
+leave/detach the tmux session by typing
+Ctrl+b and then d
+
+You can now safely log off from the remote machine, your process will keep running inside tmux. When you come back again and want to check the status of your process you can use `tmux attach` to attach to your tmux session.
+
+If you want to have multiple sessions running side-by-side, you should name each session using Ctrl+b and $. You can get a list of the currently running sessions using `tmux list-sessions`, now attach to a running session with command `tmux attach-session -t <session-name>`
