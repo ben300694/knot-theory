@@ -49,9 +49,16 @@ can give any other name instead of 'Trefoil4commutator'
 Leave/detach the tmux session by typing
 <kbd>Ctrl</kbd> + <kbd>B</kbd> and then <kbd>D</kbd>
 
+(In tmux, <kbd>Ctrl</kbd> + <kbd>B</kbd> is the control key,
+while <kbd>D</kbd> is the command key for detaching a session)
+
 You can now safely log off from the remote machine, your process will keep running inside tmux. When you come back again and want to check the status of your process you can use `tmux attach` to attach to your tmux session.
 
-If you want to have multiple sessions running side-by-side, you should name each session using 
+If you want to have multiple sessions running side-by-side,
+you should name each session using 
 <kbd>Ctrl</kbd> + <kbd>B</kbd> and <kbd>$</kbd>.
+Alternative from the terminal `tmux rename-session -t 5 brown_band_commutator`
+where `5` is the old name and `brown_band_commutator` new.
 
-You can get a list of the currently running sessions using `tmux list-sessions`, now attach to a running session with command `tmux attach-session -t <session-name>`
+You can get a list of the currently running sessions using `tmux list-sessions` or `tmux ls`,
+now attach to a running session with command `tmux attach-session -t <session-name>`

@@ -7,7 +7,8 @@ Finitely presented group < t_k, c, d | d^-1*t_k*(c*d^-1)^3*t_k*(d*c^-1)^3*t_k^-1
 sage: Test.order()
 +Infinity
 sage: Test.gap().StructureDescription()
-KeyboardInterrupt [used up more than 80% of my Samsung laptop RAM]
+KeyboardInterrupt
+# [used up more than 80% of my Samsung laptop RAM]
 Exiting Sage (CPU time 851m45.98s, Wall time 847m22.29s).
 
 # Now trying this on MPIM metis
@@ -29,7 +30,10 @@ Finitely presented group < t_k, c, d | c^-1*t_k*c*d^-1*t_k^-1*d*t_k*d*c^-1*t_k^-
 sage: Test.order()
 +Infinity
 sage: Test.gap().StructureDescription()
-KeyboardInterrupt [used up more than 75% of my Samsung laptop RAM]
+KeyboardInterrupt
+# [used up more than 75% of my Samsung laptop RAM]
 Exiting Sage (CPU time 1952m8.68s, Wall time 1941m28.57s).
+
+# Now trying this on MPIM metis
 
 
