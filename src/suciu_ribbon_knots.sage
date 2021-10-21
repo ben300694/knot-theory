@@ -10,7 +10,7 @@
 # https://doc.sagemath.org/html/en/reference/groups/sage/groups/finitely_presented.html
 
 from sage.interfaces.gap import get_gap_memory_pool_size, set_gap_memory_pool_size
-set_gap_memory_pool_size(20000000000)
+set_gap_memory_pool_size(50000000000)
 
 def commutator(a, b):
     return a*b*a^(-1)*b^(-1)
@@ -129,7 +129,7 @@ def alexander_ideal(Group):
 
 def check_all_finger_move_relations(k=2):
     Group = RPG(k)
-    print("k = ", k)
+    print("k =", k)
     print("Checking quotients of group", Group)
     for w in Group.gap().Elements():
         print("=====================================")

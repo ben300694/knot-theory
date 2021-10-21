@@ -1,3 +1,5 @@
+# # # # # # # # # # # # # # # # #
+
 sage: attach('src/suciu_ribbon_knots.sage')
 sage: Test=G_quotient_by_relation(4, commutator(d,c))
 sage: Test
@@ -8,9 +10,12 @@ sage: Test.gap().StructureDescription()
 KeyboardInterrupt [used up more than 80% of my Samsung laptop RAM]
 Exiting Sage (CPU time 851m45.98s, Wall time 847m22.29s).
 
+# Now trying this on MPIM metis
+
 # # # # # # # # # # # # # # # # #
 
-
+# Finding quotient after finger move relation [c,d]
+# with only brown ribbon band attached (this does not depend on k)
 
 sage: attach('src/suciu_ribbon_knots.sage')
 sage: F
