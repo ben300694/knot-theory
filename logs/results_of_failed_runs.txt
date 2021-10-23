@@ -1,5 +1,17 @@
 # # # # # # # # # # # # # # # # #
 
+sage: attach('src/PSL_2_Z.sage')
+sage: k=4
+sage: Test=Trefoil_quotient(4)
+sage: Test
+Finitely presented group < a, b | a^2*b^-3, (a*b^-1*a^-1*b)^4*a*b^-2*a*b*a^-1*(b*a^-1*b^-1*a)^2*(b*a^-1)^2*b^-1*a >
+sage: Test(a*b*a^(-1)*b^(-1))==Test(1)
+
+# After running for 188 h on my Samsung laptop, it uses less than 2% of the RAM
+# Still running on Samsung laptop
+
+# # # # # # # # # # # # # # # # #
+
 sage: attach('src/suciu_ribbon_knots.sage')
 sage: Test=G_quotient_by_relation(4, commutator(d,c))
 sage: Test

@@ -1,0 +1,19 @@
+# IPython log file
+
+# Sat, 23 Oct 2021 12:57:38
+attach('src/suciu_ribbon_knots.sage')
+# Sat, 23 Oct 2021 12:57:38
+sage.repl.load.load(sage.repl.load.base64.b64decode("c3JjL3N1Y2l1X3JpYmJvbl9rbm90cy5zYWdl"),globals(),True)
+# Sat, 23 Oct 2021 12:57:45
+k=Integer(2)
+# Sat, 23 Oct 2021 12:58:24
+Test=G_quotient_by_relation(Integer(2), commutator(c,d))
+# Sat, 23 Oct 2021 12:58:27
+Test.order()
+#[Out]# +Infinity
+# Sat, 23 Oct 2021 12:58:49
+Test.gap().StructureDescription()
+#[Out]# "Z"
+# Sat, 23 Oct 2021 13:01:09
+Test
+#[Out]# Finitely presented group < t_k, c, d | d^-1*t_k*c*d^-1*t_k*d*c^-1*t_k^-1, c^-1*t_k*c*d^-1*t_k^-1*d*t_k*d*c^-1*t_k^-1, c*d*c^-1*d^-1 >
