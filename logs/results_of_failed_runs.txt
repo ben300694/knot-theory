@@ -8,7 +8,7 @@ Finitely presented group < a, b | a^2*b^-3, (a*b^-1*a^-1*b)^4*a*b^-2*a*b*a^-1*(b
 sage: Test(a*b*a^(-1)*b^(-1))==Test(1)
 
 # After running for 188 h on my Samsung laptop, it uses less than 2% of the RAM
-# Still running on Samsung laptop
+# Samsung laptop killed process due to overheating
 
 # # # # # # # # # # # # # # # # #
 
