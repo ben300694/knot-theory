@@ -1,0 +1,55 @@
+# IPython log file
+
+# Mon, 25 Oct 2021 22:30:20
+attach('src/suciu_ribbon_knots.sage')
+# Mon, 25 Oct 2021 22:30:20
+sage.repl.load.load(sage.repl.load.base64.b64decode("c3JjL3N1Y2l1X3JpYmJvbl9rbm90cy5zYWdl"),globals(),True)
+# Mon, 25 Oct 2021 22:30:23
+k=Integer(3)
+# Mon, 25 Oct 2021 22:30:40
+Test=G_quotient_by_relation(Integer(2), t_k**Integer(1))
+# Mon, 25 Oct 2021 22:30:41
+Test
+#[Out]# Finitely presented group < t_k, c, d | d^-1*t_k*c*d^-1*t_k*d*c^-1*t_k^-1, c^-1*t_k*c*d^-1*t_k^-1*d*t_k*d*c^-1*t_k^-1, t_k >
+# Mon, 25 Oct 2021 22:30:53
+Test=G_quotient_by_relation(Integer(3), t_k**Integer(1))
+# Mon, 25 Oct 2021 22:30:55
+Test
+#[Out]# Finitely presented group < t_k, c, d | d^-1*t_k*(c*d^-1)^2*t_k*(d*c^-1)^2*t_k^-1, c^-1*t_k*c*d^-1*t_k^-1*d*t_k*d*c^-1*t_k^-1, t_k >
+# Mon, 25 Oct 2021 22:30:59
+Test.order()
+#[Out]# 1
+# Mon, 25 Oct 2021 22:31:10
+Test=G_quotient_by_relation(Integer(3), t_k**Integer(2))
+# Mon, 25 Oct 2021 22:31:13
+Test
+#[Out]# Finitely presented group < t_k, c, d | d^-1*t_k*(c*d^-1)^2*t_k*(d*c^-1)^2*t_k^-1, c^-1*t_k*c*d^-1*t_k^-1*d*t_k*d*c^-1*t_k^-1, t_k^2 >
+# Mon, 25 Oct 2021 22:31:18
+Test.order()
+#[Out]# 720
+# Mon, 25 Oct 2021 22:31:29
+Test.gap().StructureDescription()
+#[Out]# "C3 : (SL(2,5) : C2)"
+# Mon, 25 Oct 2021 22:32:39
+Test=G_quotient_by_relation(Integer(3), t_k**Integer(3))
+# Mon, 25 Oct 2021 22:32:41
+Test
+#[Out]# Finitely presented group < t_k, c, d | d^-1*t_k*(c*d^-1)^2*t_k*(d*c^-1)^2*t_k^-1, c^-1*t_k*c*d^-1*t_k^-1*d*t_k*d*c^-1*t_k^-1, t_k^3 >
+# Mon, 25 Oct 2021 22:32:48
+Test.order()
+#I  Coset table calculation failed -- trying with bigger table limit
+#I  Coset table calculation failed -- trying with bigger table limit
+#I  Coset table calculation failed -- trying with bigger table limit
+#I  Coset table calculation failed -- trying with bigger table limit
+#I  Coset table calculation failed -- trying with bigger table limit
+#I  Coset table calculation failed -- trying with bigger table limit
+#I  Coset table calculation failed -- trying with bigger table limit
+#I  Coset table calculation failed -- trying with bigger table limit
+GAPError: Error, reached the pre-set memory limit
+
+
+
+
+[MPIM metis with set_gap_memory_pool_size(50000000000)]
+
+

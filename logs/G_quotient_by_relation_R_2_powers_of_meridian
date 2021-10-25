@@ -1,0 +1,71 @@
+# IPython log file
+
+# Mon, 25 Oct 2021 22:14:06
+attach('src/suciu_ribbon_knots.sage')
+# Mon, 25 Oct 2021 22:14:06
+sage.repl.load.load(sage.repl.load.base64.b64decode("c3JjL3N1Y2l1X3JpYmJvbl9rbm90cy5zYWdl"),globals(),True)
+# Mon, 25 Oct 2021 22:14:10
+k=Integer(2)
+# Mon, 25 Oct 2021 22:14:32
+Test=G_quotient_by_relation(Integer(2), t_k**Integer(1))
+# Mon, 25 Oct 2021 22:14:35
+Test.order()
+#[Out]# 1
+# Mon, 25 Oct 2021 22:14:40
+Test=G_quotient_by_relation(Integer(2), t_k**Integer(2))
+# Mon, 25 Oct 2021 22:14:42
+Test.order()
+#[Out]# 48
+
+Test.gap().StructureDescription()                                         
+#[Out]# "GL(2,3)"
+
+# Mon, 25 Oct 2021 22:14:45
+Test=G_quotient_by_relation(Integer(2), t_k**Integer(3))
+# Mon, 25 Oct 2021 22:14:49
+Test.order()
+#[Out]# 2880
+# Mon, 25 Oct 2021 22:14:52
+Test=G_quotient_by_relation(Integer(2), t_k**Integer(4))
+# Mon, 25 Oct 2021 22:14:58
+Test.order()
+
+#I  Coset table calculation failed -- trying with bigger table limit
+#I  Coset table calculation failed -- trying with bigger table limit
+#I  Coset table calculation failed -- trying with bigger table limit
+#I  Coset table calculation failed -- trying with bigger table limit
+#I  Coset table calculation failed -- trying with bigger table limit
+#I  Coset table calculation failed -- trying with bigger table limit
+#I  Coset table calculation failed -- trying with bigger table limit
+#I  Coset table calculation failed -- trying with bigger table limit
+GAPError: Error, reached the pre-set memory limit
+
+Exiting Sage (CPU time 52m5.26s, Wall time 65m1.84s). [MPIM metis with set_gap_memory_pool_size(50000000000)]
+
+
+# # # # # # # # # # # # # #
+# DIFFERENT RUNS
+# # # # # # # # # # # # # #
+
+sage: Test=G_quotient_by_relation(2, t_k^5)
+sage: Test
+Finitely presented group < t_k, c, d | d^-1*t_k*c*d^-1*t_k*d*c^-1*t_k^-1, c^-1*t_k*c*d^-1*t_k^-1*d*t_k*d*c^-1*t_k^-1, t_k^5 >
+sage: Test.order()
+#I  Coset table calculation failed -- trying with bigger table limit
+#I  Coset table calculation failed -- trying with bigger table limit
+#I  Coset table calculation failed -- trying with bigger table limit
+#I  Coset table calculation failed -- trying with bigger table limit
+#I  Coset table calculation failed -- trying with bigger table limit
+#I  Coset table calculation failed -- trying with bigger table limit
+#I  Coset table calculation failed -- trying with bigger table limit
+^C---------------------------------------------------------------------------
+
+# # # # # # # # # # # # # #
+# # # # # # # # # # # # # #
+
+sage: Test=G_quotient_by_relation(2, t_k^6)
+sage: Test
+Finitely presented group < t_k, c, d | d^-1*t_k*c*d^-1*t_k*d*c^-1*t_k^-1, c^-1*t_k*c*d^-1*t_k^-1*d*t_k*d*c^-1*t_k^-1, t_k^6 >
+sage: Test.order()
+
+
