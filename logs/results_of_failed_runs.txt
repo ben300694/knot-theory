@@ -10,6 +10,8 @@ sage: Test(a*b*a^(-1)*b^(-1))==Test(1)
 # After running for 188 h on my Samsung laptop, it uses less than 2% of the RAM
 # Samsung laptop killed process due to overheating
 
+# Now trying this on MPIM metis
+
 # # # # # # # # # # # # # # # # #
 
 sage: attach('src/suciu_ribbon_knots.sage')

@@ -21,4 +21,4 @@ Test.gap().StructureDescription()
 
 
 # Interrupted due to overheating on Samsung laptop
-# Will try this on MPIM metis later
+# Run on MPIM metis documented in another file

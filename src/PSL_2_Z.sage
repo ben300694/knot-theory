@@ -10,7 +10,7 @@
 # https://doc.sagemath.org/html/en/reference/groups/sage/groups/finitely_presented.html
 
 from sage.interfaces.gap import get_gap_memory_pool_size, set_gap_memory_pool_size
-set_gap_memory_pool_size(20000000000)
+set_gap_memory_pool_size(50000000000)
 
 def commutator(a, b):
     return a*b*a^(-1)*b^(-1)
@@ -53,31 +53,31 @@ def rel_ab_manual(k):
 # Presentation of trefoil knot group from genus 1 Heegaard splitting
 Trefoil = T_Free / [a^2*b^(-3)]
 
-# Quotient of trefoil knot group by the image of commutator(c, d)
 def Trefoil_quotient(k):
+    """
+    Quotient of trefoil knot group by the image of commutator(c, d)
+    """
     return T_Free / [a^2*b^(-3), rel_ab(k)]
     
 # Trefoil_quotient(1) is abelian and isomorphic to Z
 # Trefoil_quotient(2) is abelian and isomorphic to Z
 # 
-# after running my Samsung laptop through the night:
-# Exiting Sage (CPU time 822m42.51s, Wall time 1276m55.96s).
 # Trefoil_quotient(3) is abelian and isomorphic to Z
+# Exiting Sage (CPU time 822m42.51s, Wall time 1276m55.96s). [Samsung laptop]
 #
-# Also confirmed that the quotient is abelian in the following way
-# Exiting Sage (CPU time 818m21.67s, Wall time 1167m18.18s).
+# Also confirmed that the quotient is abelian in the following way:
 # Test=Trefoil_quotient(3)
 # Test(a*b*a^(-1)*b^(-1))==Test(1)
 # sage: True
-#
-# checking Trefoil_quotient(4).gap().StructureDescription() at MPIM
-
+# Exiting Sage (CPU time 818m21.67s, Wall time 1167m18.18s). [Samsung laptop]
 
 P_Free.<A, B> = FreeGroup()
 PSL_2_Z = P_Free / [A^2, B^3]
 
-# Quotient of PSL(2,Z) by the image of commutator(c, d)
 def PSL_2_Z_quotient(k):
+    """
+    Quotient of PSL(2,Z) by the image of commutator(c, d)    
+    """
     return P_Free / [A^2, B^3, rel_ab(k)(A,B)]
 
 def run_test():
