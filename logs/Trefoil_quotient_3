@@ -10,9 +10,6 @@ k=Integer(3)
 attach('src/PSL_2_Z.sage')
 # Mon, 25 Oct 2021 21:05:23
 sage.repl.load.load(sage.repl.load.base64.b64decode("c3JjL1BTTF8yX1ouc2FnZQ=="),globals(),True)
-# Mon, 25 Oct 2021 21:05:26
-k
-#[Out]# 7
 # Mon, 25 Oct 2021 21:05:29
 k=Integer(3)
 # Mon, 25 Oct 2021 21:05:31
@@ -28,3 +25,13 @@ Test.order()
 #[Out]# +Infinity
 # Mon, 25 Oct 2021 21:05:57
 Test.gap().StructureDescription()
+#[Out]# "Z"
+# Tue, 26 Oct 2021 04:59:33
+sage.repl.load.load(sage.repl.load.base64.b64decode("L25ob21lL2JydXBwaWsvZ2l0LXNvdXJjZS9rbm90LXRoZW9yeS9zcmMvc3VjaXVfcmliYm9uX2tub3RzLnNhZ2U="),globals(),True)
+# Tue, 26 Oct 2021 10:36:35
+perm=Test.gap().IsomorphismPermGroup()
+# Tue, 26 Oct 2021 10:36:37
+perm
+#[Out]# fail
+
+# Exiting Sage (CPU time 474m1.30s, Wall time 812m29.99s). [MPIM metis]
