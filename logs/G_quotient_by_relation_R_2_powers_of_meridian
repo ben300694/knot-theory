@@ -40,7 +40,8 @@ Test.order()
 #I  Coset table calculation failed -- trying with bigger table limit
 GAPError: Error, reached the pre-set memory limit
 
-Exiting Sage (CPU time 52m5.26s, Wall time 65m1.84s). [MPIM metis with set_gap_memory_pool_size(50000000000)]
+Exiting Sage (CPU time 52m5.26s, Wall time 65m1.84s).
+[MPIM metis with set_gap_memory_pool_size(50000000000)]
 
 
 # # # # # # # # # # # # # #
@@ -76,5 +77,14 @@ sage: Test=G_quotient_by_relation(2, t_k^7)
 sage: Test
 Finitely presented group < t_k, c, d | d^-1*t_k*c*d^-1*t_k*d*c^-1*t_k^-1, c^-1*t_k*c*d^-1*t_k^-1*d*t_k*d*c^-1*t_k^-1, t_k^7 >
 sage: Test.order()
+#I  Coset table calculation failed -- trying with bigger table limit
+GAPError: Error, reached the pre-set memory limit
 
+# # # # # # # # # # # # # #
+# # # # # # # # # # # # # #
+
+sage: Test=G_quotient_by_relation(2, t_k^8)
+sage: Test
+Finitely presented group < t_k, c, d | d^-1*t_k*c*d^-1*t_k*d*c^-1*t_k^-1, c^-1*t_k*c*d^-1*t_k^-1*d*t_k*d*c^-1*t_k^-1, t_k^8 >
+sage: Test.order()
 
