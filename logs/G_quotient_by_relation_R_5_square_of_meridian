@@ -1,0 +1,16 @@
+
+attach('src/suciu_ribbon_knots.sage')
+sage: Test=G_quotient_by_relation(5, t_k^2)
+sage: Test
+Finitely presented group < t_k, c, d | d^-1*t_k*c*d^-1*c*d^-1*c*d^-1*c*d^-1*t_k*d*c^-1*d*c^-1*d*c^-1*d*c^-1*t_k^-1, c^-1*t_k*c*d^-1*t_k^-1*d*t_k*d*c^-1*t_k^-1, t_k^2 >                                           
+sage: Test.order()
+#I  Coset table calculation failed -- trying with bigger table limit
+GAPError: Error, reached the pre-set memory limit
+
+# # # # # # # # # # # # # #
+# # # # # # # # # # # # # #
+
+Exiting Sage (CPU time 467m27.28s, Wall time 2308m23.00s).
+[MPIM metis with set_gap_memory_pool_size(50000000000)]
+
+
