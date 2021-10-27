@@ -99,27 +99,6 @@ def RPG_quotient_by_relation(k=2, relation=commutator(c, d)):
                 relation]
 
 
-
-# Unfortunately, the following appears to be the case:
-#
-# both for 
-# k=2 and k=3,
-# the relation [t_k, d^(-1)*t_k*d]
-# (i.e. w = d in [t_k, w^(-1)*t_k*w])
-# will abelianize the group of RP^2 # R_k
-#
-# for k=4 the group of the RP^2-knot is NOT abelianized by relation [t_k, d^(-1)*t_k*d]
-# quotient is "S3"
-#
-# for k=5 the group of the RP^2-knot IS abelianized by relation [t_k, d^(-1)*t_k*d]
-# for k=6 the group of the RP^2-knot IS abelianized by relation [t_k, d^(-1)*t_k*d]
-#
-# for k=7 the program runs out of memory on my Samsung laptop
-# on MPIM metis with
-# set_gap_memory_pool_size(20000000000)
-# for k=7 the group of the RP^2-knot is NOT abelianized by relation [t_k, d^(-1)*t_k*d]
-# quotient is "S3"
-
 # # # # # # # # # # # # #
 # Alexander polynomials
 # # # # # # # # # # # # #
@@ -143,7 +122,6 @@ def alexander_ideal(Group):
     return alex_matrix.minors(Group.ngens() - 1)
 
 # # # # # # # # # # # # # # # # # # # # # # # # #
-# 
 # # # # # # # # # # # # # # # # # # # # # # # # #
 
 def check_all_finger_move_relations(k=2):

@@ -52,7 +52,7 @@ coverage.xml
 *.pot
 
 # Django stuff:
-*.log
+# *.log # We do not want to exclude our own logfiles
 local_settings.py
 db.sqlite3
 
