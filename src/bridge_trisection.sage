@@ -20,11 +20,27 @@ def commutator(a, b):
 def conjugate(x, w):
     return w^(-1)*x*w
 
+class Braid_crossing:
+    """
+    Attributes
+    ----------
+    first_index, second_index : the index of the left and right strand of the crossing
+    sign: +1 for positive crossing, -1 for negative crossing
+    """
+    def __init__(self, first_index: int, second_index: int, sign: int):
+        self.first_index = first_index
+        self.second_index = second_index
+        self.sign = sign
+
 class Trivial_tangle_surjection:
     """
     Attributes
     ----------
     bridge_number : bridge number of the bridge trisection
+
+    braid_word : list of elements of type braid_crossing
+
+    generators_temp_list: list of pi_1 elements of the meridians currently at the top of the tangle
     """
     def __init__(self, bridge_number: int) -> None:
         self.bridge_number = bridge_number
@@ -32,13 +48,29 @@ class Trivial_tangle_surjection:
         # where each puncture gives a generator for pi_1
         self.F = FreeGroup(2*self.bridge_number)
         self.generators_bottom_list = [self.F([i+1]) for i in range(0, 2*self.bridge_number)]
-        self.generators_temp = copy.deepcopy(self.generators_bottom_list)
+        self.generators_temp_list = copy.deepcopy(self.generators_bottom_list)
+        self.braid_word = []
+        return
 
-    def crossing(self, overstrand_index: int, understrand_index: int):
+    def add_crossing(self, crossing : Braid_crossing):
         """
-        Modifies self.generators_temp with the Wirtinger rules according to the crossing
+        Modifies self.generators_temp_list with the Wirtinger rules according to the crossing
         """
-        
+        self.braid_word.append(crossing)
+        if crossing.sign == +1:
+            overstrand_word = self.generators_temp_list[crossing.first_index]
+            new_understrand_word = overstrand_word * self.generators_temp_list[crossing.second_index] * overstrand_word^(-1)
+            self.generators_temp_list[crossing.first_index] = new_understrand_word
+            self.generators_temp_list[crossing.second_index] = overstrand_word
+        elif crossing.sign == -1:
+            overstrand_word = self.generators_temp_list[crossing.second_index]
+            new_understrand_word = overstrand_word^(-1) * self.generators_temp_list[crossing.first_index] * overstrand_word
+            self.generators_temp_list[crossing.first_index] = overstrand_word
+            self.generators_temp_list[crossing.second_index] = new_understrand_word
+        else:
+            raise Exception("Invalid value in crossing")
+        print("generators_temp_list:", self.generators_temp_list)
+        return
 
 
 # k in NN is the parameter for Suciu's family R_k
@@ -51,12 +83,4 @@ red_tangle = Trivial_tangle_surjection(bridge_number=7)
 # Use F([5]) to refer to generator x4
 # F([5,7, -8]) for the word x4*x6*x7^-1
 
-
-
-def conjugate_elements(overstrand_index, understrand_index, list_start):
-    """
-    Implements one Wirtinger conjugation
-    """
-    # TODO implement function
-    return list_start
     
