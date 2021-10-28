@@ -60,6 +60,12 @@ class Trivial_tangle_surjection:
     def __repr__(self) -> str:
         return str(self.__dict__)
 
+    def latex_align_generators_temp(self):
+        comma_sep_string = latex(self.generators_temp_list)
+        newlines_string = comma_sep_string.replace(",", " \\\\ \n")
+        print(newlines_string)
+        return newlines_string
+
     def add_crossing(self, crossing : Braid_crossing):
         """
         Modifies self.generators_temp_list with the Wirtinger rules according to the crossing
@@ -115,7 +121,16 @@ k = 3
 R_3_red_tangle_braid_crossings_list_INCOMPLETE = [Braid_crossing(5, 6, +1), 
                                                   Braid_crossing(4, 5, +1),
                                                   Braid_crossing(4, 5, +1),
-                                                  Braid_crossing(5, 6, +1)]
+                                                  Braid_crossing(5, 6, +1),
+                                                  Braid_crossing(1, 4, -1),
+                                                  Braid_crossing(4, 5, -1),
+                                                  Braid_crossing(4, 5, -1),
+                                                  Braid_crossing(1, 4, -1),
+                                                  Braid_crossing(5, 6, -1),
+                                                  Braid_crossing(4, 5, -1),
+                                                  Braid_crossing(6, 7, -1),
+                                                  Braid_crossing(5, 6, -1)
+                                                  ]
 # TODO: Finish reading off the word from the diagram
 
 # For Suciu's examples, the matching of the tangle strands at the top
