@@ -1,0 +1,20 @@
+# IPython log file
+
+# Sun, 31 Oct 2021 20:31:18
+k=Integer(3)
+# Sun, 31 Oct 2021 20:31:47
+attach('src/suciu_ribbon_knots.sage')
+# Sun, 31 Oct 2021 20:31:47
+sage.repl.load.load(sage.repl.load.base64.b64decode("c3JjL3N1Y2l1X3JpYmJvbl9rbm90cy5zYWdl"),globals(),True)
+# Sun, 31 Oct 2021 20:31:50
+k=Integer(3)
+# Sun, 31 Oct 2021 20:32:07
+Test=G_quotient_by_relation(Integer(3), commutator(c,d))
+# Sun, 31 Oct 2021 20:32:10
+Test
+#[Out]# Finitely presented group < t_k, c, d | d^-1*t_k*(c*d^-1)^2*t_k*(d*c^-1)^2*t_k^-1, c^-1*t_k*c*d^-1*t_k^-1*d*t_k*d*c^-1*t_k^-1, c*d*c^-1*d^-1 >
+# Sun, 31 Oct 2021 20:32:13
+Test.order()
+#[Out]# +Infinity
+# Sun, 31 Oct 2021 20:32:27
+Test.gap().StructureDescription()
