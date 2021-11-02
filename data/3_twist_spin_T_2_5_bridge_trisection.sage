@@ -1,37 +1,64 @@
-Twist_spin_red_tangle_braid_crossings_list = [
-                                          Braid_crossing(5, 6, +1), # brown band from bottom
-                                          Braid_crossing(4, 5, +1),
-                                          Braid_crossing(4, 5, +1),
-                                          Braid_crossing(5, 6, +1), # TODO
-                                      ]
+# # # # # # # # # # # # # # # # # # # # # #
+# 3-twist spin of the (2, 5) torus knot
+# # # # # # # # # # # # # # # # # # # # # #
 
-# There are no crossings in the bridge position
-# of Suciu's knots that we are using
-R_3_blue_tangle_braid_crossings_list = []
-R_3_green_tangle_braid_crossings_list = []
+# Tangles
 
-# For Suciu's examples, the matching of the tangle strands at the top
-# does not depend on the parameter k
-R_k_red_tangle_matching_list = [(0, 7), 
-                                (1, 6),
-                                (2, 3),
-                                (4, 5),
-                                (8, 9),
-                                (10, 13),
-                                (11, 12)]
+tau_3_T_2_5_red_tangle_braid_crossings_list = [
+    Braid_crossing(1, 2, +1), # full twist in 1, 2, 3
+    Braid_crossing(2, 3, +1),
+    Braid_crossing(1, 2, +1), 
+    Braid_crossing(2, 3, +1),
+    Braid_crossing(1, 2, +1),
+    Braid_crossing(2, 3, +1),
+    Braid_crossing(1, 2, +1), # full twist in 1, 2, 3
+    Braid_crossing(2, 3, +1),
+    Braid_crossing(1, 2, +1), 
+    Braid_crossing(2, 3, +1),
+    Braid_crossing(1, 2, +1),
+    Braid_crossing(2, 3, +1),
+    Braid_crossing(1, 2, +1), # full twist in 1, 2, 3
+    Braid_crossing(2, 3, +1),
+    Braid_crossing(1, 2, +1), 
+    Braid_crossing(2, 3, +1),
+    Braid_crossing(1, 2, +1),
+    Braid_crossing(2, 3, +1),
+    Braid_crossing(1, 2, +1), # 5 half twists between 1, 2
+    Braid_crossing(1, 2, +1),
+    Braid_crossing(1, 2, +1),
+    Braid_crossing(1, 2, +1),
+    Braid_crossing(1, 2, +1),
+]
 
-R_k_blue_tangle_matching_list = [(0, 1), 
-                                 (2, 5),
-                                 (3, 4),
-                                 (6, 7),
-                                 (8, 11),
-                                 (9, 10),
-                                 (12, 13)]
+tau_3_T_2_5_blu_tangle_braid_crossings_list = [
+    Braid_crossing(1, 2, +1),
+    Braid_crossing(1, 2, +1),
+    Braid_crossing(1, 2, +1),
+    Braid_crossing(1, 2, +1),
+    Braid_crossing(1, 2, +1)
+]
 
-R_k_green_tangle_matching_list = [(0, 3), 
-                                  (1, 2),
-                                  (4, 5),
-                                  (6, 9),
-                                  (7, 8),
-                                  (10, 11),
-                                  (12, 13)]
+tau_3_T_2_5_gre_tangle_braid_crossings_list = [
+    Braid_crossing(1, 4, +1),
+    Braid_crossing(1, 4, +1),
+    Braid_crossing(1, 4, +1),
+    Braid_crossing(1, 4, +1),
+    Braid_crossing(1, 4, +1)
+]
+
+# Matchings
+
+tau_3_T_2_5_red_tangle_matching_list = [(0, 2), 
+                                        (1, 7),
+                                        (3, 6),
+                                        (4, 5)]
+
+tau_3_T_2_5_blu_tangle_matching_list = [(0, 2), 
+                                        (1, 5),
+                                        (3, 4),
+                                        (6, 7)]
+
+tau_3_T_2_5_gre_tangle_matching_list = [(0, 4), 
+                                        (1, 7),
+                                        (2, 3),
+                                        (5, 6)]

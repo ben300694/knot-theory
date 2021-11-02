@@ -11,14 +11,14 @@ with the trefoil knot group.
 
 # Requirements
 
-SageMath version 9.0
+ * SageMath version >= 9.0
 
 # Instructions
 
 From the main git directory start `sage`
 
-`attach('src/suciu_ribbon_knots.sage')`
-`attach('src/bridge_trisection.sage')`
+ * `attach('src/suciu_ribbon_knots.sage')` to load the file with Suciu's examples
+ * `attach('src/bridge_trisection.sage')` to load the file with the functions for triplane diagrams, this will look for the data files in `/data`
 
 ## Using SageMath from docker image
 

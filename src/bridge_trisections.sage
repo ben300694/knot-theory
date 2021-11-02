@@ -9,8 +9,6 @@
 # finitely presented groups functionality
 # https://doc.sagemath.org/html/en/reference/groups/sage/groups/finitely_presented.html
 
-attach('data/suciu_bridge_trisection.sage')
-
 from sage.interfaces.gap import get_gap_memory_pool_size, set_gap_memory_pool_size
 set_gap_memory_pool_size(50000000000)
 
@@ -65,7 +63,7 @@ class Trivial_tangle_surjection:
     def latex_align_generators_temp(self):
         comma_sep_string = latex(self.generators_temp_list)
         newlines_string = comma_sep_string.replace(",", " \\\\ \n")
-        without_cdot_string = newlines_string.replace("\cdot", "")
+        without_cdot_string = newlines_string.replace("\\cdot", "")
         print(without_cdot_string)
         return without_cdot_string
 
@@ -88,7 +86,8 @@ class Trivial_tangle_surjection:
             self.generators_temp_list[crossing.second_index] = new_understrand_word
         else:
             raise Exception("Invalid value in sign of crossing")
-        print("generators_temp_list:", self.generators_temp_list)
+        # Uncomment to print intermediate steps         
+        # print("generators_temp_list:", self.generators_temp_list)
         return
 
 class Bridge_Trisection:
@@ -97,20 +96,27 @@ class Bridge_Trisection:
     ----------
     bridge_number : bridge number of the bridge trisection
 
-    red_tangle, blue_tangle, green_tangle: of type Trivial_tangle_surjection
+    red_tangle, blu_tangle, gre_tangle: red, blue and green tangle of type Trivial_tangle_surjection
     """
     def __init__(self, bridge_number: int) -> None:
         self.bridge_number = bridge_number
         self.red_tangle = Trivial_tangle_surjection(self.bridge_number)
-        self.blue_tangle = Trivial_tangle_surjection(self.bridge_number)
-        self.green_tangle = Trivial_tangle_surjection(self.bridge_number)
+        self.blu_tangle = Trivial_tangle_surjection(self.bridge_number)
+        self.gre_tangle = Trivial_tangle_surjection(self.bridge_number)
 
     def __repr__(self) -> str:
         return str(self.__dict__)
 
-
-# k in NN is the parameter for Suciu's family R_k
-k = 3
+    def group(self):
+        """
+        Returns a presentation of the fundamental group of the complement of
+        the bridge trisected surface
+        """
+        # TODO Fit the three groups of the tangles together at the bridge points
+        # and at the maxima
+        # WARNING: Careful with the mirror images when putting pairs of tangles together
+        raise Exception("NOT IMPLEMENTED")
+        return
 
 # Example: for b=7, have that red_tangle.F is
 # FreeGroup on generators {x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13}
@@ -124,6 +130,15 @@ k = 3
 #
 # brown band guiding arc (w_2)^(-1) = t_k * d * c^(-1) * (t_k)^(-1)
 
+# # # # # # # # # # # # #
+# R_3 in Suciu's family
+# # # # # # # # # # # # #
+
+attach('data/suciu_bridge_trisection.sage')
+
+# k in NN is the parameter for Suciu's family R_k
+k = 3
+
 R_3 = Bridge_Trisection(7)
 R_3.red_tangle = Trivial_tangle_surjection(bridge_number=7, 
                                            braid_word=R_3_red_tangle_braid_crossings_list,
@@ -131,12 +146,52 @@ R_3.red_tangle = Trivial_tangle_surjection(bridge_number=7,
 
 # In Suciu's examples, the red and green tangle
 # do not have any crossings
-R_3.blue_tangle = Trivial_tangle_surjection(bridge_number=7, 
-                                            braid_word=R_k_blue_tangle_braid_crossings_list,
-                                            strand_matching=R_k_blue_tangle_matching_list)
-R_3.green_tangle = Trivial_tangle_surjection(bridge_number=7, 
-                                             braid_word=R_k_blue_tangle_braid_crossings_list,
-                                             strand_matching=R_k_green_tangle_matching_list)
+R_3.blu_tangle = Trivial_tangle_surjection(bridge_number=7, 
+                                           braid_word=R_k_blue_tangle_braid_crossings_list,
+                                           strand_matching=R_k_blue_tangle_matching_list)
+R_3.gre_tangle = Trivial_tangle_surjection(bridge_number=7, 
+                                           braid_word=R_k_blue_tangle_braid_crossings_list,
+                                           strand_matching=R_k_green_tangle_matching_list)
+
+# # # # # # # # # # # # # # # # # # # # # #
+# 0-twist spin of the (2, 3) torus knot
+# = spun trefoil knot
+# # # # # # # # # # # # # # # # # # # # # #
+
+attach('data/l_twist_spin_T_2_b_bridge_trisection.sage')
+
+spun_trefoil = Bridge_Trisection(4)
+
+spun_trefoil.red_tangle = Trivial_tangle_surjection(bridge_number=4,
+                                                    braid_word=tau_l_T_2_b_red_tangle_braid_crossings_list(0, 3),
+                                                    strand_matching=tau_l_T_2_b_red_tangle_matching_list(0, 3))
+spun_trefoil.blu_tangle = Trivial_tangle_surjection(bridge_number=4,
+                                                    braid_word=tau_l_T_2_b_blu_tangle_braid_crossings_list(0, 3),
+                                                    strand_matching=tau_l_T_2_b_blu_tangle_matching_list(0, 3))
+spun_trefoil.gre_tangle = Trivial_tangle_surjection(bridge_number=4,
+                                                    braid_word=tau_l_T_2_b_gre_tangle_braid_crossings_list(0, 3),
+                                                    strand_matching=tau_l_T_2_b_gre_tangle_matching_list(0, 3))
+
+# # # # # # # # # # # # # # # # # # # # # #
+# 3-twist spin of the (2, 5) torus knot
+# # # # # # # # # # # # # # # # # # # # # #
+
+attach('data/3_twist_spin_T_2_5_bridge_trisection.sage')
+
+tau_3_T_2_5 = Bridge_Trisection(4)
+
+tau_3_T_2_5.red_tangle = Trivial_tangle_surjection(bridge_number=4,
+                                                   braid_word=tau_3_T_2_5_red_tangle_braid_crossings_list,
+                                                   strand_matching=tau_3_T_2_5_red_tangle_matching_list)
+tau_3_T_2_5.blu_tangle = Trivial_tangle_surjection(bridge_number=4,
+                                                   braid_word=tau_3_T_2_5_blu_tangle_braid_crossings_list,
+                                                   strand_matching=tau_3_T_2_5_blu_tangle_matching_list)
+tau_3_T_2_5.gre_tangle = Trivial_tangle_surjection(bridge_number=4,
+                                                   braid_word=tau_3_T_2_5_gre_tangle_braid_crossings_list,
+                                                   strand_matching=tau_3_T_2_5_gre_tangle_matching_list)
+
+
+
 
 
     

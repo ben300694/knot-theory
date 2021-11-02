@@ -1,3 +1,7 @@
+# # # # # # # # # # # # #
+# R_3 in Suciu's family
+# # # # # # # # # # # # #
+
 R_3_red_tangle_braid_crossings_list = [
                                           Braid_crossing(5, 6, +1), # brown band from bottom
                                           Braid_crossing(4, 5, +1),
