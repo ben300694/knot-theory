@@ -9,6 +9,16 @@ This is applied to
 [Suciu's infinite family of ribbon 2-knots](https://doi.org/10.1017/S0305004100063684)
 with the trefoil knot group.
 
+# Requirements
+
+SageMath version 9.0
+
+# Instructions
+
+From the main git directory start `sage`
+
+`attach('src/suciu_ribbon_knots.sage')`
+`attach('src/bridge_trisection.sage')`
 
 ## Using SageMath from docker image
 
