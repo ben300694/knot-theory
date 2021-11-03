@@ -138,6 +138,30 @@ class Bridge_Trisection:
         # WARNING: Careful with the mirror images when putting pairs of tangles together
         return self.F.quotient(self.all_relations())
 
+    def pairwise_pushout_relations(self):
+        """
+        Returns a three element list of the pairwise pushout groups
+        """
+        unlink_redblu = self.red_tangle.relations() + self.blu_tangle.relations()
+        unlink_blugre = self.blu_tangle.relations() + self.gre_tangle.relations()
+        unlink_grered = self.gre_tangle.relations() + self.red_tangle.relations()
+        return [unlink_redblu, unlink_blugre, unlink_grered]
+
+    def pairwise_pushout_is_free(self):
+        """
+        Checks whether the pairwise pushouts are free groups
+        """
+        for pairwise_relations in self.pairwise_pushout_relations():
+            pushout = self.F.quotient(pairwise_relations)
+            print(pushout)
+            print(pushout.simplified())
+            if pushout.simplified().relations() != ():
+                print(False)
+                continue
+                # return False
+            print(True)
+        return True
+
 # Example: for b=7, have that red_tangle.F is
 # FreeGroup on generators {x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13}
 #
