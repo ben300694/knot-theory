@@ -207,9 +207,9 @@ R_3.gre_tangle = Trivial_tangle_surjection(bridge_number=7,
                                            braid_word=R_k_blue_tangle_braid_crossings_list,
                                            strand_matching=R_k_green_tangle_matching_list)
 
+
 # # # # # # # # # # # # # # # # # # # # # #
-# 0-twist spin of the (2, 3) torus knot
-# = spun trefoil knot
+# l-twist spin of the (2, b) torus knot
 # # # # # # # # # # # # # # # # # # # # # #
 
 attach('data/l_twist_spin_T_2_b_bridge_trisection.sage')
@@ -217,20 +217,23 @@ attach('data/l_twist_spin_T_2_b_bridge_trisection.sage')
 def tau_l_T_2_b(l : int, b : int):
     tau_l_T_2_b = Bridge_Trisection(4)
     tau_l_T_2_b.red_tangle = Trivial_tangle_surjection(bridge_number=4,
-                                                    free_group=spun_trefoil.F,
+                                                    free_group=tau_l_T_2_b.F,
                                                     braid_word=tau_l_T_2_b_red_tangle_braid_crossings_list(l, b),
                                                     strand_matching=tau_l_T_2_b_red_tangle_matching_list(l, b))
     tau_l_T_2_b.blu_tangle = Trivial_tangle_surjection(bridge_number=4,
-                                                        free_group=spun_trefoil.F,
+                                                        free_group=tau_l_T_2_b.F,
                                                         braid_word=tau_l_T_2_b_blu_tangle_braid_crossings_list(l, b),
                                                         strand_matching=tau_l_T_2_b_blu_tangle_matching_list(l, b))
     tau_l_T_2_b.gre_tangle = Trivial_tangle_surjection(bridge_number=4,
-                                                        free_group=spun_trefoil.F,
+                                                        free_group=tau_l_T_2_b.F,
                                                         braid_word=tau_l_T_2_b_gre_tangle_braid_crossings_list(l, b),
                                                         strand_matching=tau_l_T_2_b_gre_tangle_matching_list(l, b))
     return tau_l_T_2_b
     
-
+# # # # # # # # # # # # # # # # # # # # # #
+# 0-twist spin of the (2, 3) torus knot
+# = spun trefoil knot
+# # # # # # # # # # # # # # # # # # # # # #
 spun_trefoil = tau_l_T_2_b(0, 3)
 
 #spun_trefoil = Bridge_Trisection(4)
