@@ -102,6 +102,13 @@ class Trivial_tangle_surjection:
         # print("generators_temp_list:", self.generators_temp_list)
         return
 
+    def product_of_conjugates(self):
+        """
+        Calculates the product of the meridians at the top
+        x_{1} * x_{2} * ... * x_{2b}
+        """
+        return reduce((lambda x, y: x * y), self.generators_temp_list)
+
     def relations(self):
         """
         Lists the relations obtained by joining up the
@@ -207,22 +214,42 @@ R_3.gre_tangle = Trivial_tangle_surjection(bridge_number=7,
 
 attach('data/l_twist_spin_T_2_b_bridge_trisection.sage')
 
-spun_trefoil = Bridge_Trisection(4)
+def tau_l_T_2_b(l : int, b : int):
+    tau_l_T_2_b = Bridge_Trisection(4)
+    tau_l_T_2_b.red_tangle = Trivial_tangle_surjection(bridge_number=4,
+                                                    free_group=spun_trefoil.F,
+                                                    braid_word=tau_l_T_2_b_red_tangle_braid_crossings_list(l, b),
+                                                    strand_matching=tau_l_T_2_b_red_tangle_matching_list(l, b))
+    tau_l_T_2_b.blu_tangle = Trivial_tangle_surjection(bridge_number=4,
+                                                        free_group=spun_trefoil.F,
+                                                        braid_word=tau_l_T_2_b_blu_tangle_braid_crossings_list(l, b),
+                                                        strand_matching=tau_l_T_2_b_blu_tangle_matching_list(l, b))
+    tau_l_T_2_b.gre_tangle = Trivial_tangle_surjection(bridge_number=4,
+                                                        free_group=spun_trefoil.F,
+                                                        braid_word=tau_l_T_2_b_gre_tangle_braid_crossings_list(l, b),
+                                                        strand_matching=tau_l_T_2_b_gre_tangle_matching_list(l, b))
+    return tau_l_T_2_b
+    
 
-spun_trefoil.red_tangle = Trivial_tangle_surjection(bridge_number=4,
-                                                    free_group=spun_trefoil.F,
-                                                    braid_word=tau_l_T_2_b_red_tangle_braid_crossings_list(0, 3),
-                                                    strand_matching=tau_l_T_2_b_red_tangle_matching_list(0, 3))
-spun_trefoil.blu_tangle = Trivial_tangle_surjection(bridge_number=4,
-                                                    free_group=spun_trefoil.F,
-                                                    braid_word=tau_l_T_2_b_blu_tangle_braid_crossings_list(0, 3),
-                                                    strand_matching=tau_l_T_2_b_blu_tangle_matching_list(0, 3))
-spun_trefoil.gre_tangle = Trivial_tangle_surjection(bridge_number=4,
-                                                    free_group=spun_trefoil.F,
-                                                    braid_word=tau_l_T_2_b_gre_tangle_braid_crossings_list(0, 3),
-                                                    strand_matching=tau_l_T_2_b_gre_tangle_matching_list(0, 3))
+spun_trefoil = tau_l_T_2_b(0, 3)
+
+#spun_trefoil = Bridge_Trisection(4)
+#spun_trefoil.red_tangle = Trivial_tangle_surjection(bridge_number=4,
+#                                                    free_group=spun_trefoil.F,
+#                                                    braid_word=tau_l_T_2_b_red_tangle_braid_crossings_list(0, 3),
+#                                                    strand_matching=tau_l_T_2_b_red_tangle_matching_list(0, 3))
+#spun_trefoil.blu_tangle = Trivial_tangle_surjection(bridge_number=4,
+#                                                    free_group=spun_trefoil.F,
+#                                                    braid_word=tau_l_T_2_b_blu_tangle_braid_crossings_list(0, 3),
+#                                                    strand_matching=tau_l_T_2_b_blu_tangle_matching_list(0, 3))
+#spun_trefoil.gre_tangle = Trivial_tangle_surjection(bridge_number=4,
+#                                                    free_group=spun_trefoil.F,
+#                                                    braid_word=tau_l_T_2_b_gre_tangle_braid_crossings_list(0, 3),
+#                                                    strand_matching=tau_l_T_2_b_gre_tangle_matching_list(0, 3))
 
 # # # # # # # # # # # # # # # # # # # # # #
+# This example is encoded in a separate file and does
+# not use the more general l_twist_spin_T_2_b_bridge_trisection.sage
 # 3-twist spin of the (2, 5) torus knot
 # # # # # # # # # # # # # # # # # # # # # #
 

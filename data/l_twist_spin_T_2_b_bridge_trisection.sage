@@ -39,19 +39,19 @@ def tau_l_T_2_b_gre_tangle_braid_crossings_list(l : int, b : int):
 # the matching of the strands at the top does not
 # depend on the numbers l and b
 def tau_l_T_2_b_red_tangle_matching_list(l : int, b : int):
-    return [(0, 2), 
-            (1, 7),
+    return [(0, 1), 
+            (2, 7),
             (3, 6),
             (4, 5)]
 
 def tau_l_T_2_b_blu_tangle_matching_list(l : int, b : int):
-    return [(0, 2), 
-            (1, 5),
+    return [(0, 1), 
+            (2, 5),
             (3, 4),
             (6, 7)]
 
 def tau_l_T_2_b_gre_tangle_matching_list(l : int, b : int):
-    return [(0, 4), 
-            (1, 7),
+    return [(0, 1), 
+            (4, 7),
             (2, 3),
             (5, 6)]

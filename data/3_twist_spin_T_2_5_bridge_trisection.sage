@@ -48,17 +48,17 @@ tau_3_T_2_5_gre_tangle_braid_crossings_list = [
 
 # Matchings
 
-tau_3_T_2_5_red_tangle_matching_list = [(0, 2), 
-                                        (1, 7),
+tau_3_T_2_5_red_tangle_matching_list = [(0, 1), 
+                                        (2, 7),
                                         (3, 6),
                                         (4, 5)]
 
-tau_3_T_2_5_blu_tangle_matching_list = [(0, 2), 
-                                        (1, 5),
+tau_3_T_2_5_blu_tangle_matching_list = [(0, 1), 
+                                        (2, 5),
                                         (3, 4),
                                         (6, 7)]
 
-tau_3_T_2_5_gre_tangle_matching_list = [(0, 4), 
-                                        (1, 7),
+tau_3_T_2_5_gre_tangle_matching_list = [(0, 1), 
+                                        (4, 7),
                                         (2, 3),
                                         (5, 6)]
