@@ -22,8 +22,7 @@ Test.gap().StructureDescription()
 
 GAPError: Error, reached the pre-set memory limit
 (change it with the -o command line option)
-### detaching file /nhome/bruppik/git-source/knot-theory/src/suciu_ribbon_knots.sage because it does not exist (deleted?) ###
+
 sage:                                                                                                                                                                                                         
 Exiting Sage (CPU time 7327m1.47s, Wall time 11719m22.07s).
-
-[MPIM metis]
+[MPIM metis with set_gap_memory_pool_size(50000000000)]

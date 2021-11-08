@@ -17,3 +17,9 @@ Test.order()
 #[Out]# +Infinity
 # Thu, 21 Oct 2021 14:32:19
 Test.gap().StructureDescription()
+
+GAPError: Error, reached the pre-set memory limit
+(change it with the -o command line option)\
+
+Exiting Sage (CPU time 19439m46.01s, Wall time 25853m7.12s).
+[MPIM metis]
