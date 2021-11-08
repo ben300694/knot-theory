@@ -161,6 +161,7 @@ class Bridge_Trisection:
         for pairwise_relations in self.pairwise_pushout_relations():
             pushout = self.F.quotient(pairwise_relations)
             print(pushout)
+            print(pushout.simplification_isomorphism())
             print(pushout.simplified())
             if pushout.simplified().relations() != ():
                 print(False)
