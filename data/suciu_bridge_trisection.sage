@@ -76,8 +76,8 @@ R_3_red_tangle_braid_crossings_list = [
 # There are no crossings in the bridge position
 # of Suciu's knots R_k that we are using,
 # in particular this is independent of k
-R_k_blue_tangle_braid_crossings_list = []
-R_k_green_tangle_braid_crossings_list = []
+R_k_blu_tangle_braid_crossings_list = []
+R_k_gre_tangle_braid_crossings_list = []
 
 # For Suciu's examples, the matching of the tangle strands at the top
 # does not depend on the parameter k

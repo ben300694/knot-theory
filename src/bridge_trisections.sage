@@ -204,7 +204,7 @@ R_3.blu_tangle = Trivial_tangle_surjection(bridge_number=7,
                                            braid_word=R_k_blu_tangle_braid_crossings_list,
                                            strand_matching=R_k_blu_tangle_matching_list)
 R_3.gre_tangle = Trivial_tangle_surjection(bridge_number=7, 
-                                           free_grosup=R_3.F,
+                                           free_group=R_3.F,
                                            braid_word=R_k_gre_tangle_braid_crossings_list,
                                            strand_matching=R_k_gre_tangle_matching_list)
 
@@ -237,20 +237,6 @@ def tau_l_T_2_b(l : int, b : int):
 # # # # # # # # # # # # # # # # # # # # # #
 spun_trefoil = tau_l_T_2_b(0, 3)
 
-#spun_trefoil = Bridge_Trisection(4)
-#spun_trefoil.red_tangle = Trivial_tangle_surjection(bridge_number=4,
-#                                                    free_group=spun_trefoil.F,
-#                                                    braid_word=tau_l_T_2_b_red_tangle_braid_crossings_list(0, 3),
-#                                                    strand_matching=tau_l_T_2_b_red_tangle_matching_list(0, 3))
-#spun_trefoil.blu_tangle = Trivial_tangle_surjection(bridge_number=4,
-#                                                    free_group=spun_trefoil.F,
-#                                                    braid_word=tau_l_T_2_b_blu_tangle_braid_crossings_list(0, 3),
-#                                                    strand_matching=tau_l_T_2_b_blu_tangle_matching_list(0, 3))
-#spun_trefoil.gre_tangle = Trivial_tangle_surjection(bridge_number=4,
-#                                                    free_group=spun_trefoil.F,
-#                                                    braid_word=tau_l_T_2_b_gre_tangle_braid_crossings_list(0, 3),
-#                                                    strand_matching=tau_l_T_2_b_gre_tangle_matching_list(0, 3))
-
 # # # # # # # # # # # # # # # # # # # # # #
 # p-twist spin of the (q, r) torus knot
 # for {p, q, r} = {2, 3, 5}
@@ -258,9 +244,12 @@ spun_trefoil = tau_l_T_2_b(0, 3)
 
 # meridional rank 2
 
-# 5-twist spin of the (2, 3) torus knot
-tau_3_T_2_5 = tau_l_T_2_b(3, 5)
 # 3-twist spin of the (2, 5) torus knot
+tau_3_T_2_5 = tau_l_T_2_b(3, 5)
+
+# 5-twist spin of the (2, 3) torus knot
+# This example is also encoded in a separate file which does
+# not use the more general l_twist_spin_T_2_b_bridge_trisection.sage
 tau_5_T_2_3 = tau_l_T_2_b(5, 3)
 
 # meridional rank 3
@@ -268,30 +257,32 @@ tau_5_T_2_3 = tau_l_T_2_b(5, 3)
 tau_2_T_3_5 = None # TODO not implemented yet
 
 
-# # # # # # # # # # # # # # # # # # # # # #
-# This example is also encoded in a separate file which does
-# not use the more general l_twist_spin_T_2_b_bridge_trisection.sage
-# 3-twist spin of the (2, 5) torus knot
-# # # # # # # # # # # # # # # # # # # # # #
-
-#attach('data/3_twist_spin_T_2_5_bridge_trisection.sage')
-#
-#tau_3_T_2_5 = Bridge_Trisection(4)
-#
-#tau_3_T_2_5.red_tangle = Trivial_tangle_surjection(bridge_number=4,
-#                                                   free_group=tau_3_T_2_5.F,
-#                                                   braid_word=tau_3_T_2_5_red_tangle_braid_crossings_list,
-#                                                   strand_matching=tau_3_T_2_5_red_tangle_matching_list)
-#tau_3_T_2_5.blu_tangle = Trivial_tangle_surjection(bridge_number=4,
-#                                                   free_group=tau_3_T_2_5.F,
-#                                                   braid_word=tau_3_T_2_5_blu_tangle_braid_crossings_list,
-#                                                   strand_matching=tau_3_T_2_5_blu_tangle_matching_list)
-#tau_3_T_2_5.gre_tangle = Trivial_tangle_surjection(bridge_number=4,
-#                                                   free_group=tau_3_T_2_5.F,
-#                                                   braid_word=tau_3_T_2_5_gre_tangle_braid_crossings_list,
-#                                                   strand_matching=tau_3_T_2_5_gre_tangle_matching_list)
 
 
+# # # # # # # # # # # # #
+# Double of the fusion number one ribbon disk
+# of the Stevedore knot 6_1
+# # # # # # # # # # # # #
+
+attach('data/stevedore_disk_double.sage')
+
+double_6_1 = Bridge_Trisection(5)
+
+double_6_1.red_tangle = Trivial_tangle_surjection(bridge_number=5,
+                                                  free_group=double_6_1.F,
+                                                  braid_word=double_6_1_red_tangle_braid_crossings_list,
+                                                  strand_matching=double_6_1_red_tangle_matching_list)
+
+# In ribbon knots, the red and green tangle
+# do not have any crossings
+double_6_1.blu_tangle = Trivial_tangle_surjection(bridge_number=5,
+                                                  free_group=double_6_1.F,
+                                                  braid_word=double_6_1_blu_tangle_braid_crossings_list,
+                                                  strand_matching=double_6_1_blu_tangle_matching_list)
+double_6_1.gre_tangle = Trivial_tangle_surjection(bridge_number=5, 
+                                                  free_group=double_6_1.F,
+                                                  braid_word=double_6_1_gre_tangle_braid_crossings_list,
+                                                  strand_matching=double_6_1_gre_tangle_matching_list)
 
 
 
