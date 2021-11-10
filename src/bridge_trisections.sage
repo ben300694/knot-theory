@@ -201,12 +201,12 @@ R_3.red_tangle = Trivial_tangle_surjection(bridge_number=7,
 # do not have any crossings
 R_3.blu_tangle = Trivial_tangle_surjection(bridge_number=7,
                                            free_group=R_3.F,
-                                           braid_word=R_k_blue_tangle_braid_crossings_list,
-                                           strand_matching=R_k_blue_tangle_matching_list)
+                                           braid_word=R_k_blu_tangle_braid_crossings_list,
+                                           strand_matching=R_k_blu_tangle_matching_list)
 R_3.gre_tangle = Trivial_tangle_surjection(bridge_number=7, 
-                                           free_group=R_3.F,
-                                           braid_word=R_k_blue_tangle_braid_crossings_list,
-                                           strand_matching=R_k_green_tangle_matching_list)
+                                           free_grosup=R_3.F,
+                                           braid_word=R_k_gre_tangle_braid_crossings_list,
+                                           strand_matching=R_k_gre_tangle_matching_list)
 
 
 # # # # # # # # # # # # # # # # # # # # # #

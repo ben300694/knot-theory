@@ -67,10 +67,10 @@ R_3_red_tangle_braid_crossings_list = [
                                           Braid_crossing(6, 7, -1),
                                           Braid_crossing(6, 7, -1),
                                           Braid_crossing(7, 10, -1), # c^(-1) ~~~ k = 3
+                                          Braid_crossing(5, 6, +1),
                                           Braid_crossing(6, 7, +1),
-                                          Braid_crossing(7, 8, +1),
-                                          Braid_crossing(7, 8, +1),
-                                          Braid_crossing(6, 7, +1), # t_k
+                                          Braid_crossing(6, 7, +1),
+                                          Braid_crossing(5, 6, +1), # t_k
                                       ]
 
 # There are no crossings in the bridge position
@@ -89,18 +89,18 @@ R_k_red_tangle_matching_list = [(0, 7),
                                 (10, 13),
                                 (11, 12)]
 
-R_k_blue_tangle_matching_list = [(0, 1), 
-                                 (2, 5),
-                                 (3, 4),
-                                 (6, 7),
-                                 (8, 11),
-                                 (9, 10),
-                                 (12, 13)]
+R_k_blu_tangle_matching_list = [(0, 1), 
+                                (2, 5),
+                                (3, 4),
+                                (6, 7),
+                                (8, 11),
+                                (9, 10),
+                                (12, 13)]
 
-R_k_green_tangle_matching_list = [(0, 3), 
-                                  (1, 2),
-                                  (4, 5),
-                                  (6, 9),
-                                  (7, 8),
-                                  (10, 11),
-                                  (12, 13)]
+R_k_gre_tangle_matching_list = [(0, 3), 
+                                (1, 2),
+                                (4, 5),
+                                (6, 9),
+                                (7, 8),
+                                (10, 11),
+                                (12, 13)]
