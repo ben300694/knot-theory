@@ -230,6 +230,28 @@ def tau_l_T_2_b(l : int, b : int):
                                                         braid_word=tau_l_T_2_b_gre_tangle_braid_crossings_list(l, b),
                                                         strand_matching=tau_l_T_2_b_gre_tangle_matching_list(l, b))
     return tau_l_T_2_b
+
+# # # # # # # # # # # # # # # # # # # # # #
+# l-twist spin of the (3, b) torus knot
+# # # # # # # # # # # # # # # # # # # # # #
+
+attach('data/l_twist_spin_T_3_b_bridge_trisection.sage')
+
+def tau_l_T_3_b(l : int, b : int):
+    tau_l_T_3_b = Bridge_Trisection(7)
+    tau_l_T_3_b.red_tangle = Trivial_tangle_surjection(bridge_number=7,
+                                                    free_group=tau_l_T_3_b.F,
+                                                    braid_word=tau_l_T_3_b_red_tangle_braid_crossings_list(l, b),
+                                                    strand_matching=tau_l_T_3_b_red_tangle_matching_list(l, b))
+    tau_l_T_3_b.blu_tangle = Trivial_tangle_surjection(bridge_number=7,
+                                                        free_group=tau_l_T_3_b.F,
+                                                        braid_word=tau_l_T_3_b_blu_tangle_braid_crossings_list(l, b),
+                                                        strand_matching=tau_l_T_3_b_blu_tangle_matching_list(l, b))
+    tau_l_T_3_b.gre_tangle = Trivial_tangle_surjection(bridge_number=7,
+                                                        free_group=tau_l_T_3_b.F,
+                                                        braid_word=tau_l_T_3_b_gre_tangle_braid_crossings_list(l, b),
+                                                        strand_matching=tau_l_T_3_b_gre_tangle_matching_list(l, b))
+    return tau_l_T_3_b
     
 # # # # # # # # # # # # # # # # # # # # # #
 # 0-twist spin of the (2, 3) torus knot
@@ -254,7 +276,7 @@ tau_5_T_2_3 = tau_l_T_2_b(5, 3)
 
 # meridional rank 3
 
-tau_2_T_3_5 = None # TODO not implemented yet
+tau_2_T_3_5 = tau_l_T_3_b(2, 5)
 
 
 
