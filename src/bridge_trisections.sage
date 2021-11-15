@@ -183,30 +183,31 @@ class Bridge_Trisection:
 # brown band guiding arc (w_2)^(-1) = t_k * d * c^(-1) * (t_k)^(-1)
 
 # # # # # # # # # # # # #
-# R_3 in Suciu's family
+# R_k in Suciu's family
 # # # # # # # # # # # # #
 
-attach('data/suciu_bridge_trisection.sage')
+attach('data/suciu_R_k_bridge_trisection.sage')
 
 # k in NN is the parameter for Suciu's family R_k
-k = 3
+def R_k(k : int):
+    R_k = Bridge_Trisection(7)
+    R_k.red_tangle = Trivial_tangle_surjection(bridge_number=7,
+                                               free_group=R_k.F,
+                                               braid_word=R_k_red_tangle_braid_crossings_list(k),
+                                               strand_matching=R_k_red_tangle_matching_list(k))
+    R_k.blu_tangle = Trivial_tangle_surjection(bridge_number=7,
+                                               free_group=R_k.F,
+                                               braid_word=R_k_blu_tangle_braid_crossings_list(k),
+                                               strand_matching=R_k_blu_tangle_matching_list(k))
+    R_k.gre_tangle = Trivial_tangle_surjection(bridge_number=7, 
+                                               free_group=R_k.F,
+                                               braid_word=R_k_gre_tangle_braid_crossings_list(k),
+                                               strand_matching=R_k_gre_tangle_matching_list(k))
+    return R_k
 
-R_3 = Bridge_Trisection(7)
-R_3.red_tangle = Trivial_tangle_surjection(bridge_number=7,
-                                           free_group=R_3.F,
-                                           braid_word=R_3_red_tangle_braid_crossings_list,
-                                           strand_matching=R_k_red_tangle_matching_list)
+R_3 = R_k(3)
+R_4 = R_k(4)
 
-# In Suciu's examples, the red and green tangle
-# do not have any crossings
-R_3.blu_tangle = Trivial_tangle_surjection(bridge_number=7,
-                                           free_group=R_3.F,
-                                           braid_word=R_k_blu_tangle_braid_crossings_list,
-                                           strand_matching=R_k_blu_tangle_matching_list)
-R_3.gre_tangle = Trivial_tangle_surjection(bridge_number=7, 
-                                           free_group=R_3.F,
-                                           braid_word=R_k_gre_tangle_braid_crossings_list,
-                                           strand_matching=R_k_gre_tangle_matching_list)
 
 
 # # # # # # # # # # # # # # # # # # # # # #

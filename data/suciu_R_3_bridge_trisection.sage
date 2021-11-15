@@ -11,7 +11,7 @@ R_3_red_tangle_braid_crossings_list = [
                                           Braid_crossing(4, 5, -1),
                                           Braid_crossing(4, 5, -1),
                                           Braid_crossing(1, 4, -1), # d
-                                          Braid_crossing(4, 5, -1),
+                                          Braid_crossing(5, 6, -1),
                                           Braid_crossing(4, 5, -1),
                                           Braid_crossing(6, 7, -1),
                                           Braid_crossing(5, 6, -1), # go under t_k from left to right
@@ -31,6 +31,10 @@ R_3_red_tangle_braid_crossings_list = [
                                           Braid_crossing(6, 7, +1),
                                           Braid_crossing(6, 7, +1),
                                           Braid_crossing(5, 6, +1), # (t_k)^(-1)
+                                          Braid_crossing(7, 10, +1),
+                                          Braid_crossing(10, 11, +1),
+                                          Braid_crossing(6, 7, +1),
+                                          Braid_crossing(7, 10, +1), # over orange ribbon
                                           Braid_crossing(11, 12, -1),
                                           Braid_crossing(10, 11, -1),
                                           Braid_crossing(12, 13, -1),
@@ -104,3 +108,22 @@ R_k_gre_tangle_matching_list = [(0, 3),
                                 (7, 8),
                                 (10, 11),
                                 (12, 13)]
+                                
+# To import this into your SageMath project use
+
+#R_3 = Bridge_Trisection(7)
+#R_3.red_tangle = Trivial_tangle_surjection(bridge_number=7,
+#                                           free_group=R_3.F,
+#                                           braid_word=R_3_red_tangle_braid_crossings_list,
+#                                           strand_matching=R_k_red_tangle_matching_list)
+
+## In Suciu's examples, the red and green tangle
+## do not have any crossings
+#R_3.blu_tangle = Trivial_tangle_surjection(bridge_number=7,
+#                                           free_group=R_3.F,
+#                                           braid_word=R_k_blu_tangle_braid_crossings_list,
+#                                           strand_matching=R_k_blu_tangle_matching_list)
+#R_3.gre_tangle = Trivial_tangle_surjection(bridge_number=7, 
+#                                           free_group=R_3.F,
+#                                           braid_word=R_k_gre_tangle_braid_crossings_list,
+#                                           strand_matching=R_k_gre_tangle_matching_list)
