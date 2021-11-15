@@ -50,7 +50,7 @@ class Trivial_tangle_surjection:
         self.bridge_number = bridge_number
         # We have 2b bridge points on the central surface,
         # where each puncture gives a generator for pi_1
-        self.F = FreeGroup(2*self.bridge_number)
+        self.F = free_group
         self.generators_bottom_list = [self.F([i+1]) for i in range(0, 2*self.bridge_number)]
         self.generators_temp_list = copy.deepcopy(self.generators_bottom_list)
         # Add the crossings to braid word and calculate the meridians at the top
@@ -105,16 +105,25 @@ class Trivial_tangle_surjection:
     def product_of_conjugates(self):
         """
         Calculates the product of the meridians at the top
-        x_{1} * x_{2} * ... * x_{2b}
+        x'_{1} * x'_{2} * ... * x'_{2b}
         """
         return reduce((lambda x, y: x * y), self.generators_temp_list)
 
     def relations(self):
         """
-        Lists the relations obtained by joining up the
-        tangle strands at the top
+        Lists the relations obtained by
+        joining up the tangle strands at the top
         """
         return [self.generators_temp_list[a]*self.generators_temp_list[b] for (a,b) in self.strand_matching]
+        
+    def group(self):
+        """
+        Gives a presentation of the group of the tangle complement
+        (which is free on b generators)
+        with generators the meridians around the punctures and
+        relations from joining up the tangle strands at the top
+        """
+        return self.F.quotient(self.relations())
 
 class Bridge_Trisection:
     """
