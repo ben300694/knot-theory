@@ -290,11 +290,10 @@ tau_2_T_3_5 = tau_l_T_3_b(2, 5)
 
 
 
-
-# # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Double of the fusion number one ribbon disk
 # of the Stevedore knot 6_1
-# # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 attach('data/stevedore_disk_double.sage')
 
