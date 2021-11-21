@@ -33,6 +33,13 @@ class Braid_crossing:
     def __repr__(self) -> str:
         return str(self.__dict__)
 
+    def _latex_(self):
+        # the r indicates raw string literals
+        latex_string = LatexExpr(r"\sigma_{" + str(self.first_index) + r"," + str(self.second_index) + r"}")
+        if self.sign == -1:
+            latex_string = r"\overline{" + latex_string + r"}"
+        return latex_string
+
 class Trivial_tangle_surjection:
     """
     Attributes
