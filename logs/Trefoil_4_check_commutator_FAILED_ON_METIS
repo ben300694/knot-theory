@@ -16,3 +16,7 @@ Test.order()
 #[Out]# +Infinity
 # Wed, 20 Oct 2021 14:05:32
 Test(a)*Test(b)==Test(b)*Test(a)
+
+GAPError: Error, reached the pre-set memory limit
+sage: Exiting Sage (CPU time 40997m6.12s, Wall time 48976m49.67s).
+[MPIM metis]

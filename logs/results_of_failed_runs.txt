@@ -10,7 +10,7 @@ sage: Test(a*b*a^(-1)*b^(-1))==Test(1)
 # After running for 188 h on my Samsung laptop, it uses less than 2% of the RAM
 # Samsung laptop killed process due to overheating
 
-# Now trying this on MPIM metis
+# Failed on MPIM metis, memory ran out
 
 # # # # # # # # # # # # # # # # #
 
@@ -25,7 +25,7 @@ KeyboardInterrupt
 # [used up more than 80% of my Samsung laptop RAM]
 Exiting Sage (CPU time 851m45.98s, Wall time 847m22.29s).
 
-# Now trying this on MPIM metis
+# Failed on MPIM metis, memory ran out
 
 # # # # # # # # # # # # # # # # #
 
