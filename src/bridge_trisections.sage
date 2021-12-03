@@ -189,6 +189,14 @@ class Bridge_Trisection:
             print(True)
         return True
 
+#    def construct_coloring(n: int):
+#        """
+#        Constructs the object containing the coloring for the tangles
+#        """
+#        S = SymmetricGroup(n)
+#        self.coloring = Coloring(self.F, S, [], [])
+        
+
 # Example: for b=7, have that red_tangle.F is
 # FreeGroup on generators {x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13}
 #
@@ -272,12 +280,6 @@ def tau_l_T_3_b(l : int, b : int):
                                                         braid_word=tau_l_T_3_b_gre_tangle_braid_crossings_list(l, b),
                                                         strand_matching=tau_l_T_3_b_gre_tangle_matching_list(l, b))
     return tau_l_T_3_b
-    
-# # # # # # # # # # # # # # # # # # # # # #
-# 0-twist spin of the (2, 3) torus knot
-# = spun trefoil knot
-# # # # # # # # # # # # # # # # # # # # # #
-spun_trefoil = tau_l_T_2_b(0, 3)
 
 # # # # # # # # # # # # # # # # # # # # # #
 # p-twist spin of the (q, r) torus knot
@@ -326,5 +328,85 @@ double_6_1.gre_tangle = Trivial_tangle(bridge_number=5,
                                                   strand_matching=double_6_1_gre_tangle_matching_list)
 
 
+# # # # # # # # # # # # # # # # # # # # # #
+# 0-twist spin of the (2, 3) torus knot
+# = spun trefoil knot
+# # # # # # # # # # # # # # # # # # # # # #
+spun_trefoil = tau_l_T_2_b(0, 3)
 
-    
+# Use the coloring function for this example
+# spun_trefoil.construct_coloring(3)
+
+# # # # # # # # # # # # # # # # # # # # # #
+# This space is for implementing the steps in the
+# Reidemeister-Schreier procedure
+# 
+# We can implement the functions here first and
+# incorporate them in the classes above later
+# # # # # # # # # # # # # # # # # # # # # #
+
+class Coloring:
+    """
+    Attributes
+    ----------
+    F: Free group containing the generators (in our case x_0, ... x_{2b-1})
+    S: Symmetric group used as the codomain for the coloring
+    relations: list of relations_source specifying the source group as a quotient of F
+    images_of_generators:
+        list of elements of the symmetric group S specifying the images of the generators of F
+        We are always assuming that the representation is transitive,
+        so that we obtain a connected cover.
+    """
+    def __init__(self, F: FreeGroup, S: SymmetricGroup, relations_source = [], images_of_generators = []):
+        self.F = F
+        self.S = S
+        self.relations_source = relations_source
+        # construct homomorphism F --> S from the list images_of_generators
+        self.representation = self.F.hom([self.S(g) for g in images_of_generators])
+
+    def __repr__(self) -> str:
+        return str(self.__dict__)
+
+    def lift_of_single_relation(relation, starting_sheet):
+        """
+        Computes the attaching circle for the lift of a 2-cell,
+        with the basepoint in the starting_sheet
+
+        relation: word in a FreeGroup
+        starting_sheet: 
+        """
+        current_sheet = starting_sheet
+        # TODO: Continue implementing this function
+        # We can integrate it into the python classes later
+        return
+
+    def reidemeister_schreier(coloring):
+        for rel in coloring.relations:
+            break # TODO: find the lifts for each relation using the function above
+        # TODO: Continue implementing this function
+        # We can integrate it into the python classes later
+        return
+
+
+test_F = FreeGroup(4)
+test_S = SymmetricGroup(3)
+# Suppose S is the symmetric group
+# We can act by elements of the symmetric group by writing
+# S('(1, 2)')(1), the result is 2
+# Another example:
+# test_hom(test_F([1]))(1) is the action of the image of x0 on the number '1'
+
+# Write down list with images of generators of F in the symmetric group
+test_images_of_generators = ['(1, 2)', '(1, 2)', '(2, 3)', '(2, 3)']
+
+# Relation in the handwritting notes from 2021-12-03 that we can
+# test the implementation of the Reidemeister-Schreier algorithm on
+test_relation = test_F([2, -4, 1, 3])
+
+# Constructing an example coloring to test our functions on
+test_coloring = Coloring(test_F, test_S, [test_relation], test_images_of_generators)
+
+
+
+
+
