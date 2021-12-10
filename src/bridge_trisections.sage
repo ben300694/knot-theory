@@ -382,7 +382,7 @@ class Coloring:
         # test_coloring.lift_of_single_relation(test_relation, 1)
         current_sheet = starting_sheet
         list_of_sheets = [starting_sheet]
-        for current_letter in relation.Tietze():     
+        for current_letter in relation.Tietze():
             print("current_letter =", current_letter)
             print("permutation of current letter =", self.representation(self.F([current_letter])))
             current_sheet = self.representation(self.F([current_letter]))(current_sheet)
@@ -402,15 +402,29 @@ class Coloring:
     def reidemeister_schreier(self):
         list_of_lifted_relations = []
         for rel in self.relations_source:
-            # TODO: Replace 3 by rank of symmetric group = number of sheets
-            for i in range(0, 3):
+            # self.S.degree() is the rank of the symmetric group = number of sheets
+            for i in range(0, self.S.degree()):
                 rel_lifted = self.lift_of_single_relation(rel, i+1)
+                # i+1 because sheets are indexed starting from 1
                 list_of_lifted_relations.append(rel_lifted)
         # TODO: Continue implementing this function
         # TODO: Think about the claw
         # We can integrate it into the python classes later
         return list_of_lifted_relations
 
+class Group_Trisection:
+    def __init__(self, F: FreeGroup, S: SymmetricGroup, C: Coloring):
+        self.F = F
+        self.S = S
+        self.C = C
+        self.big_group_F = FreeGroup(self.F.rank() * self.S.degree())
+
+    # To get the group element in the big group corresponding to a pair
+    # group_trisection_trefoil.big_group_F([group_trisection_trefoil.convert_index((-2, 3))])
+    def convert_index(self, pair_sub_sup):
+        (sub, sup) = pair_sub_sup
+        return sign(sub) * (abs(sub) + self.F.rank() * (sup - 1))
+        
 
 test_F = FreeGroup(4)
 test_S = SymmetricGroup(3)
@@ -440,6 +454,8 @@ test_coloring.representation(test_relation)
 # new example of one of the tangles in the spun trefoil
 trefoil_F = FreeGroup(8)
 trefoil_S = SymmetricGroup(3)
+# in our coloring of the spun trefoil,
+# first two points map to (1, 2), all of the others to (1, 3)
 trefoil_images_of_generators = ['(1, 2)', '(1, 2)', '(1, 3)', '(1, 3)', '(1, 3)', '(1, 3)', '(1, 3)', '(1, 3)']
 
 trefoil_relation = trefoil_F([1, 6, 1, -6, -1, 3])
@@ -448,5 +464,7 @@ trefoil_coloring = Coloring(trefoil_F, trefoil_S, spun_trefoil.red_tangle.relati
 # trefoil_coloring.lift_of_single_relation(trefoil_relation, 1)
 # test the function on all relations of red tangle
 # trefoil_coloring.reidemeister_schreier()
+
+group_trisection_trefoil = Group_Trisection(trefoil_F, trefoil_S, trefoil_coloring)
 
 
