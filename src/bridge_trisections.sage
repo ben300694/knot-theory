@@ -367,25 +367,49 @@ class Coloring:
     def __repr__(self) -> str:
         return str(self.__dict__)
 
-    def lift_of_single_relation(relation, starting_sheet):
+    def lift_of_single_relation(self, relation, starting_sheet):
         """
         Computes the attaching circle for the lift of a 2-cell,
         with the basepoint in the starting_sheet
 
-        relation: word in a FreeGroup
-        starting_sheet: 
-        """
-        current_sheet = starting_sheet
-        # TODO: Continue implementing this function
-        # We can integrate it into the python classes later
-        return
+        Returns a list of pairs, with each element giving (subscript, superscript)
+        in the lifted relation (following Fox' notation convention)
 
-    def reidemeister_schreier(coloring):
-        for rel in coloring.relations:
-            break # TODO: find the lifts for each relation using the function above
+        relation: word in a FreeGroup
+        starting_sheet: index of the lift of the basepoint where the lift of the curve is starting 
+        """
+        # Test the function by calling
+        # test_coloring.lift_of_single_relation(test_relation, 1)
+        current_sheet = starting_sheet
+        list_of_sheets = [starting_sheet]
+        for current_letter in relation.Tietze():     
+            print("current_letter =", current_letter)
+            print("permutation of current letter =", self.representation(self.F([current_letter])))
+            current_sheet = self.representation(self.F([current_letter]))(current_sheet)
+            list_of_sheets.append(current_sheet)
+            print("current list_of_sheets =", list_of_sheets)
+        # try to find subscripts and superscripts, save them as a list of pairs
+        list_of_pairs = []        
+        for i, current_letter in enumerate(relation.Tietze()):
+            subscript = current_letter
+            if sign(current_letter) == +1:
+                superscript = list_of_sheets[i]
+            elif sign(current_letter) == -1:
+                superscript = list_of_sheets[i+1]
+            list_of_pairs.append((subscript, superscript))
+        return list_of_pairs
+
+    def reidemeister_schreier(self):
+        list_of_lifted_relations = []
+        for rel in self.relations_source:
+            # TODO: Replace 3 by rank of symmetric group = number of sheets
+            for i in range(0, 3):
+                rel_lifted = self.lift_of_single_relation(rel, i+1)
+                list_of_lifted_relations.append(rel_lifted)
         # TODO: Continue implementing this function
+        # TODO: Think about the claw
         # We can integrate it into the python classes later
-        return
+        return list_of_lifted_relations
 
 
 test_F = FreeGroup(4)
@@ -401,12 +425,28 @@ test_images_of_generators = ['(1, 2)', '(1, 2)', '(2, 3)', '(2, 3)']
 
 # Relation in the handwritting notes from 2021-12-03 that we can
 # test the implementation of the Reidemeister-Schreier algorithm on
+# to obtain the word in the free group
 test_relation = test_F([2, -4, 1, 3])
+
+# can get the list of indices determining the word via test_relation.Tietze()
 
 # Constructing an example coloring to test our functions on
 test_coloring = Coloring(test_F, test_S, [test_relation], test_images_of_generators)
 
+# Compute the image of test_relation under the homomorphism
+test_coloring.representation(test_relation)
 
 
+# new example of one of the tangles in the spun trefoil
+trefoil_F = FreeGroup(8)
+trefoil_S = SymmetricGroup(3)
+trefoil_images_of_generators = ['(1, 2)', '(1, 2)', '(1, 3)', '(1, 3)', '(1, 3)', '(1, 3)', '(1, 3)', '(1, 3)']
+
+trefoil_relation = trefoil_F([1, 6, 1, -6, -1, 3])
+trefoil_coloring = Coloring(trefoil_F, trefoil_S, spun_trefoil.red_tangle.relations(), trefoil_images_of_generators)
+# test the function to relation
+# trefoil_coloring.lift_of_single_relation(trefoil_relation, 1)
+# test the function on all relations of red tangle
+# trefoil_coloring.reidemeister_schreier()
 
 
