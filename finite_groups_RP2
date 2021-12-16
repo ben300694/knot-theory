@@ -21,3 +21,21 @@ RPG(Integer(4))
 #[Out]# Finitely presented group < t_k, c, d | d^-1*t_k*(c*d^-1)^3*t_k*(d*c^-1)^3*t_k^-1, c^-1*t_k*c*d^-1*t_k^-1*d*t_k*d*c^-1*t_k^-1, t_k^2 >
 # Wed, 15 Dec 2021 01:01:14
 RPG(Integer(4)).order()
+
+#################################################
+
+GAPError: Error, reached the pre-set memory limit
+(change it with the -o command line option)
+### detaching file /nhome/bruppik/git-source/knot-theory/src/suciu_ribbon_knots.sage because it does not exist (deleted?) ###                             
+sage:                                                                                                                                                      
+Exiting Sage (CPU time 1139m7.05s, Wall time 2682m36.63s).
+
+# Memory limit was set to
+# set_gap_memory_pool_size(200000000000)
+
+#################################################
+#################################################
+#################################################
+
+# Trying with
+# set_gap_memory_pool_size(800000000000)

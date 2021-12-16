@@ -1,0 +1,11 @@
+# IPython log file
+
+# Thu, 16 Dec 2021 21:45:26
+attach("src/suciu_ribbon_knots.sage")
+# Thu, 16 Dec 2021 21:45:26
+sage.repl.load.load(sage.repl.load.base64.b64decode("c3JjL3N1Y2l1X3JpYmJvbl9rbm90cy5zYWdl"),globals(),True)
+# Thu, 16 Dec 2021 21:45:33
+RPG(Integer(4))
+#[Out]# Finitely presented group < t_k, c, d | d^-1*t_k*(c*d^-1)^3*t_k*(d*c^-1)^3*t_k^-1, c^-1*t_k*c*d^-1*t_k^-1*d*t_k*d*c^-1*t_k^-1, t_k^2 >
+# Thu, 16 Dec 2021 21:45:43
+RPG(Integer(4)).order()
