@@ -25,7 +25,7 @@ l = vector([1, 1, 0])
 
 # linking-framing matrix for Hoste's formula
 # https://www.ams.org/journals/tran/1986-297-02/S0002-9947-1986-0854084-4/S0002-9947-1986-0854084-4.pdf
-B = matrix([[-5/4, -1, 0], [-1, -3/2, -1], [0, -1, -3/2]])
+B = matrix([[-5/4, 1, 0], [1, -3/2, 1], [0, 1, -3/2]])
 
 lk_d_L = matrix([1, 1, 0])
 lk_dbb_L = matrix([1, 1, 0])
@@ -44,6 +44,7 @@ def Q_matrix(B, Q_top):
     """
     return matrix([Q_top[i]*v for (i, v) in enumerate(B.columns())]).transpose()
 
+Q = Q_matrix(B, Q_top)
 # to see whether L_0 is null-homologous in the surgery,
 # look for integral solution vectors a for the equation
 # l = Q*a 
