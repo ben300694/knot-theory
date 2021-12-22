@@ -20,15 +20,15 @@ P_top = vector([-5, -3, -3]) # numerators p_i
 Q_top = vector([ 4,  2,  2]) # denominators q_i
 
 # vector of linking numbers of L_0 with the surgery curves
-l = vector([1, 1, 0])
+l = vector([+1, -2, +2])
 
 
 # linking-framing matrix for Hoste's formula
 # https://www.ams.org/journals/tran/1986-297-02/S0002-9947-1986-0854084-4/S0002-9947-1986-0854084-4.pdf
 B = matrix([[-5/4, 1, 0], [1, -3/2, 1], [0, 1, -3/2]])
 
-lk_d_L = matrix([1, 1, 0])
-lk_dbb_L = matrix([1, 1, 0])
+lk_d_L = matrix([+1, -2, +2])
+lk_dbb_L = matrix([+1, -2, +2])
 
 def hoste_formula(lk_S3: int, lk_J1_L, B, lk_J2_L):
     return lk_S3 - lk_J1_L * B^(-1) * lk_J2_L.transpose()
@@ -56,8 +56,13 @@ s = solve(eqn, a_1, a_2, a_3)
 # alternative if Q is invertible
 if Q.det() != 0:
     a = Q^(-1)*l
-    
+
 def tb_new(tb_old: int, a, q, l):
+    """
+    l is the vector of linking numbers with the surgery curves
+    a is the itegral solution vector to l = Q*a
+    q is the vector of topological surgery denominators
+    """    
     return tb_old - sum([a[i]*q[i]*l[i] for i in range(len(a))])
     
 # rot is a vector of rotation numbers of the surgery components L_i
