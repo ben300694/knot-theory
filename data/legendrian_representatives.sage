@@ -1,4 +1,20 @@
-%gui tk
+"""
+Using SnapPy via the SageMath integration
+Install docker image from
+https://github.com/3-manifolds/sagedocker
+or alternatively
+https://hub.docker.com/r/computop/sage/
+
+Run docker with X11 host:
+(https://stackoverflow.com/questions/49169055/docker-tkinter-tclerror-couldnt-connect-to-display)
+# sudo docker run -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY computop/sage
+# xhost +
+# sage
+
+Your new Plink window needs an event loop to become visible.
+Type "%gui tk" below (without the quotes) to start one.
+"""
+
 M = snappy.Manifold()
 M.identify()
 # [t12047(0,0)(0,0)(0,0)(0,0),

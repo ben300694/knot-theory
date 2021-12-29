@@ -71,17 +71,3 @@ rot = vector([0, 0, 0])
 
 def rot_new(rot_old: int, a, q, rot):
     return rot_old - sum([a[i]*q[i]*rot[i] for i in range(len(a))])
-    
-# Using SnapPy via the SageMath integration
-# Install docker image from
-# https://github.com/3-manifolds/sagedocker
-# https://hub.docker.com/r/computop/sage/
-#
-# Run docker with X11 host
-# https://stackoverflow.com/questions/49169055/docker-tkinter-tclerror-couldnt-connect-to-display
-# sudo docker run -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY computop/sage
-# xhost +
-
-# Your new Plink window needs an event loop to become visible.
-# Type "%gui tk" below (without the quotes) to start one.
-# M=snappy.Manifold()
