@@ -31,7 +31,7 @@ lk_d_L = matrix([+1, -2, +2])
 lk_dbb_L = matrix([+1, -2, +2])
 
 def hoste_formula(lk_S3: int, lk_J1_L, B, lk_J2_L):
-    return lk_S3 - lk_J1_L * B^(-1) * lk_J2_L.transpose()
+    return lk_S3 - lk_J1_L * B^(-1) * lk_J2_L
     
 def Q_matrix(B, Q_top):
     """
