@@ -14,6 +14,7 @@ set_gap_memory_pool_size(50000000000)
 
 import copy
 
+
 def commutator(a, b):
     return a*b*a^(-1)*b^(-1)
 
@@ -213,7 +214,7 @@ class Bridge_Trisection:
 # R_k in Suciu's family
 # # # # # # # # # # # # #
 
-attach('data/suciu_R_k_bridge_trisection.sage')
+load('data/suciu_R_k_bridge_trisection.sage')
 
 # k in NN is the parameter for Suciu's family R_k
 def R_k(k : int):
@@ -241,7 +242,7 @@ R_4 = R_k(4)
 # l-twist spin of the (2, b) torus knot
 # # # # # # # # # # # # # # # # # # # # # #
 
-attach('data/l_twist_spin_T_2_b_bridge_trisection.sage')
+load('data/l_twist_spin_T_2_b_bridge_trisection.sage')
 
 def tau_l_T_2_b(l : int, b : int):
     tau_l_T_2_b = Bridge_Trisection(4)
@@ -263,7 +264,7 @@ def tau_l_T_2_b(l : int, b : int):
 # l-twist spin of the (3, b) torus knot
 # # # # # # # # # # # # # # # # # # # # # #
 
-attach('data/l_twist_spin_T_3_b_bridge_trisection.sage')
+load('data/l_twist_spin_T_3_b_bridge_trisection.sage')
 
 def tau_l_T_3_b(l : int, b : int):
     tau_l_T_3_b = Bridge_Trisection(7)
@@ -307,7 +308,7 @@ tau_2_T_3_5 = tau_l_T_3_b(2, 5)
 # of the Stevedore knot 6_1
 # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-attach('data/stevedore_disk_double.sage')
+load('data/stevedore_disk_double.sage')
 
 double_6_1 = Bridge_Trisection(5)
 
@@ -345,7 +346,7 @@ spun_trefoil = tau_l_T_2_b(0, 3)
 # incorporate them in the classes above later
 # # # # # # # # # # # # # # # # # # # # # #
 
-class Coloring:
+class Colored_trivial_tangle:
     """
     Attributes
     ----------
@@ -399,7 +400,7 @@ class Coloring:
             list_of_pairs.append((subscript, superscript))
         return list_of_pairs
 
-    def reidemeister_schreier(self):
+    def lift_relations(self):
         list_of_lifted_relations = []
         for rel in self.relations_source:
             # self.S.degree() is the rank of the symmetric group = number of sheets
@@ -408,12 +409,129 @@ class Coloring:
                 # i+1 because sheets are indexed starting from 1
                 list_of_lifted_relations.append(rel_lifted)
         # TODO: Continue implementing this function
-        # TODO: Think about the claw
-        # We can integrate it into the python classes later
+        
+        # Find the claw relations
+        
+        # n degree of the cover
+        # g number of generators of group 
         return list_of_lifted_relations
+   
+    def claw_relations(self):
 
+        #F=FreeGroup(g)
+        #Free group with generators x0,x1,...,x(g-1)
+
+        n=self.S.degree()
+        g=self.F.rank()
+        
+        #homomorphism rho sends the generator xi to rho[i]
+        #rho=['(1,2)','(1,2)','(1,3)','(1,3)','(1,3)','(1,3)','(1,3)','(1,3)']
+        #rho=['(1,2)','(1,2)','(1,2,3)','(1,2,3)','(1,2,3)','(1,2,3)','(1,4,5)','(1,4,5)']
+        #vertices p1,p2,p3,... note indexing starts at 1 to match symmetric group
+
+        #there is an edge from pi to pj
+
+
+        reachable=[1]
+        remaining=[i for i in range(2,n+1)] #vertices remaining to be visited
+        print('remaining',remaining)
+        claw_relations={1:[]}
+
+
+        while len(remaining)>0:
+
+            for current in reachable:
+                print("current",current)
+                reachable.remove(current)
+
+                for j in range(g): #j is the subscript of x_j.  
+
+                    #Determine which vertices you can reach from current from each of the generators x_0,...,x_g-1
+                    #endpoint=self.S(rho[j])(current) 
+                    
+                    endpoint=self.representation(self.F([j+1]))(current)
+
+                    #check if the endpoint vertex has been visited.  If not (i.e., if in remaining)...
+                    if( endpoint in remaining):
+                        print("endpoint",endpoint)
+                        remaining.remove(endpoint) #don't visit this vertex again           
+
+
+                        reachable.append(endpoint)
+
+                        #next concatenate corresponding variable with current claw relation
+                        previous_subword=claw_relations[current].copy()
+                        print('previous_subword',previous_subword)
+                        print('new generator to add to subword',[j,current])              
+                        claw_relations.update({endpoint: previous_subword})
+                        claw_relations[endpoint].append([j,current])
+
+                        print("remaining",remaining)
+                        print("reachable",reachable)
+                        print("claw_relations",claw_relations)
+
+
+        #print("final claw relations",claw_relations)
+        
+        claw_relations_list=list(claw_relations.values())
+        return claw_relations_list
+    
+    def unbranchedtobranched_relations(self):
+        # Powers of meridians
+        
+        n=self.S.degree()
+        g=self.F.rank()
+        
+        relations=[]
+        for j in range(g): #go through all generators x_j
+            #image=self.representation(self.F([j]))
+            #startingvertex=1
+            #remainingvertices=[i for i in range(2,n+1)]
+            
+            #endpoint=self.representation(self.F([j]))(1)
+            #relations.append([j,startingvertex])
+           # while !(endpoint=startingvertex):
+                
+               # endpoint=self.representation(self.F([j]))(endpoint)
+               # relations.append
+                
+            cycles=self.representation(self.F([j+1])).cycle_tuples(singletons=True)
+            #basepoints=[]
+            
+            for cycle in cycles:
+                #basepoints.append(cycle[0])
+                #k=len(cycle)
+                cycle_relation=[]
+                for i in range(len(cycle)):
+                    cycle_relation.append([j,cycle[i]])
+                relations.append(cycle_relation)
+                
+                
+        return relations
+                
+          
+                
+                
+            
+        
+    
+ #   def reidemeister_schreier(self):
+        #return lifted relations, claw relations, and branch relations together
+        
+        
+        
+        
+        
+        
+        # We can integrate it into the python classes later
+        
+
+#class Colored_bridge_trisection:
+    
+    
+    
 class Group_Trisection:
-    def __init__(self, F: FreeGroup, S: SymmetricGroup, C: Coloring):
+    def __init__(self, F: FreeGroup, S: SymmetricGroup, C: Colored_trivial_tangle):
         self.F = F
         self.S = S
         self.C = C
@@ -445,7 +563,7 @@ test_relation = test_F([2, -4, 1, 3])
 # can get the list of indices determining the word via test_relation.Tietze()
 
 # Constructing an example coloring to test our functions on
-test_coloring = Coloring(test_F, test_S, [test_relation], test_images_of_generators)
+test_coloring = Colored_trivial_tangle(test_F, test_S, [test_relation], test_images_of_generators)
 
 # Compute the image of test_relation under the homomorphism
 test_coloring.representation(test_relation)
@@ -459,7 +577,7 @@ trefoil_S = SymmetricGroup(3)
 trefoil_images_of_generators = ['(1, 2)', '(1, 2)', '(1, 3)', '(1, 3)', '(1, 3)', '(1, 3)', '(1, 3)', '(1, 3)']
 
 trefoil_relation = trefoil_F([1, 6, 1, -6, -1, 3])
-trefoil_coloring = Coloring(trefoil_F, trefoil_S, spun_trefoil.red_tangle.relations(), trefoil_images_of_generators)
+trefoil_coloring = Colored_trivial_tangle(trefoil_F, trefoil_S, spun_trefoil.red_tangle.relations(), trefoil_images_of_generators)
 # test the function to relation
 # trefoil_coloring.lift_of_single_relation(trefoil_relation, 1)
 # test the function on all relations of red tangle
