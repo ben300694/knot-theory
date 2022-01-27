@@ -361,14 +361,16 @@ class Colored_trivial_tangle:
     def __init__(self, F: FreeGroup, S: SymmetricGroup, relations_source = [], images_of_generators = []):
         self.F = F
         self.S = S
+        
         self.relations_source = relations_source
         # construct homomorphism F --> S from the list images_of_generators
         self.representation = self.F.hom([self.S(g) for g in images_of_generators])
+        self.coverF=FreeGroup(rank(self.F)*self.S.degree())
 
     def __repr__(self) -> str:
         return str(self.__dict__)
 
-    def lift_of_single_relation(self, relation, starting_sheet):
+    def lift_of_single_relation_sub_sup_exp(self, relation, starting_sheet):
         """
         Computes the attaching circle for the lift of a 2-cell,
         with the basepoint in the starting_sheet
@@ -384,11 +386,11 @@ class Colored_trivial_tangle:
         current_sheet = starting_sheet
         list_of_sheets = [starting_sheet]
         for current_letter in relation.Tietze():
-            print("current_letter =", current_letter)
-            print("permutation of current letter =", self.representation(self.F([current_letter])))
+            #print("current_letter =", current_letter)
+            #print("permutation of current letter =", self.representation(self.F([current_letter])))
             current_sheet = self.representation(self.F([current_letter]))(current_sheet)
             list_of_sheets.append(current_sheet)
-            print("current list_of_sheets =", list_of_sheets)
+            #print("current list_of_sheets =", list_of_sheets)
         # try to find subscripts and superscripts, save them as a list of pairs
         list_of_pairs = []        
         for i, current_letter in enumerate(relation.Tietze()):
@@ -398,14 +400,28 @@ class Colored_trivial_tangle:
             elif sign(current_letter) == -1:
                 superscript = list_of_sheets[i+1]
             list_of_pairs.append((subscript, superscript))
-        return list_of_pairs
-
-    def lift_relations(self):
+        list_of_triples=[]
+        for pair in list_of_pairs:
+            list_of_triples.append([abs(pair[0])-1,pair[1],sign(pair[0])]) #fixes off by one error in subscript, moves sign of exponent to third entry
+        #each triple is (superscript,subscript,exponent (+/-1))
+        return list_of_triples
+    
+    def lift_of_single_relation_reindex(self, relation, starting_sheet):
+        relationtriples=self.lift_of_single_relation_sub_sup_exp(relation, starting_sheet)
+        relation=[]
+        for triple in relationtriples:
+            (sub, sup, exp) = triple
+            new_subscript= (( (sub + self.F.rank() * (sup - 1)))+1)*exp
+            
+            relation.append(new_subscript)
+        return self.coverF(relation)
+            
+    def lift_relations_sub_sup_exp(self):
         list_of_lifted_relations = []
         for rel in self.relations_source:
             # self.S.degree() is the rank of the symmetric group = number of sheets
             for i in range(0, self.S.degree()):
-                rel_lifted = self.lift_of_single_relation(rel, i+1)
+                rel_lifted = self.lift_of_single_relation_sub_sup_exp(rel, i+1)
                 # i+1 because sheets are indexed starting from 1
                 list_of_lifted_relations.append(rel_lifted)
         # TODO: Continue implementing this function
@@ -416,7 +432,18 @@ class Colored_trivial_tangle:
         # g number of generators of group 
         return list_of_lifted_relations
    
-    def claw_relations(self):
+    def lift_relations_reindex(self):
+        list_of_lifted_relations=[]
+        for rel in self.relations_source:
+            # self.S.degree() is the rank of the symmetric group = number of sheets
+            for i in range(0, self.S.degree()):
+                 rel_lifted = self.lift_of_single_relation_reindex(rel, i+1)
+                 # i+1 because sheets are indexed starting from 1
+                 list_of_lifted_relations.append(rel_lifted)
+        
+        return list_of_lifted_relations
+    
+    def claw_relations_sub_sup_exp(self):
 
         #F=FreeGroup(g)
         #Free group with generators x0,x1,...,x(g-1)
@@ -434,14 +461,14 @@ class Colored_trivial_tangle:
 
         reachable=[1]
         remaining=[i for i in range(2,n+1)] #vertices remaining to be visited
-        print('remaining',remaining)
+        #print('remaining',remaining)
         claw_relations={1:[]}
 
 
         while len(remaining)>0:
 
             for current in reachable:
-                print("current",current)
+                #print("current",current)
                 reachable.remove(current)
 
                 for j in range(g): #j is the subscript of x_j.  
@@ -453,7 +480,7 @@ class Colored_trivial_tangle:
 
                     #check if the endpoint vertex has been visited.  If not (i.e., if in remaining)...
                     if( endpoint in remaining):
-                        print("endpoint",endpoint)
+                        #print("endpoint",endpoint)
                         remaining.remove(endpoint) #don't visit this vertex again           
 
 
@@ -461,22 +488,38 @@ class Colored_trivial_tangle:
 
                         #next concatenate corresponding variable with current claw relation
                         previous_subword=claw_relations[current].copy()
-                        print('previous_subword',previous_subword)
-                        print('new generator to add to subword',[j,current])              
+                        #print('previous_subword',previous_subword)
+                        #print('new generator to add to subword',[j,current])              
                         claw_relations.update({endpoint: previous_subword})
-                        claw_relations[endpoint].append([j,current])
+                        claw_relations[endpoint].append([j,current,1])
 
-                        print("remaining",remaining)
-                        print("reachable",reachable)
-                        print("claw_relations",claw_relations)
+                        #print("remaining",remaining)
+                        #print("reachable",reachable)
+                        #print("claw_relations",claw_relations)
 
 
         #print("final claw relations",claw_relations)
         
         claw_relations_list=list(claw_relations.values())
+        
         return claw_relations_list
     
-    def unbranchedtobranched_relations(self):
+    def claw_relations_reindex(self):
+        relations_sub_sup_exp=self.claw_relations_sub_sup_exp()
+        relations_list=[]
+        for relation_sub_sup_exp in relations_sub_sup_exp:
+            relation_reindexed=[]
+            for triple in relation_sub_sup_exp:
+                (sub, sup, exp) = triple
+                new_subscript= (( (sub + self.F.rank() * (sup - 1)))+1)*exp
+                relation_reindexed.append(new_subscript)
+            relations_list.append(relation_reindexed)
+        group_relations_list=[]
+        for reln in relations_list:
+            group_relations_list.append(self.coverF(reln))
+        return group_relations_list
+    
+    def unbranchedtobranched_relations_sub_sup_exp(self):
         # Powers of meridians
         
         n=self.S.degree()
@@ -503,14 +546,37 @@ class Colored_trivial_tangle:
                 #k=len(cycle)
                 cycle_relation=[]
                 for i in range(len(cycle)):
-                    cycle_relation.append([j,cycle[i]])
+                    cycle_relation.append([j,cycle[i],1])
                 relations.append(cycle_relation)
                 
                 
         return relations
                 
-          
-                
+    def unbranchedtobranched_relations_reindex(self):
+        relations_sub_sup_exp=self.unbranchedtobranched_relations_sub_sup_exp()
+        relations_list=[]
+        for relation_sub_sup_exp in relations_sub_sup_exp:
+            relation_reindexed=[]
+            for triple in relation_sub_sup_exp:
+                (sub, sup, exp) = triple
+                new_subscript= (( (sub + self.F.rank() * (sup - 1)))+1)*exp
+                relation_reindexed.append(new_subscript)
+            relations_list.append(relation_reindexed)
+        group_relations_list=[]
+        for reln in relations_list:
+            group_relations_list.append(self.coverF(reln))
+        return group_relations_list
+    
+    
+    def all_cover_relations(self):
+        lift_relations=self.lift_relations_reindex()
+        claw_relations=self.claw_relations_reindex()
+        unbranchedtobranched_relations=self.unbranchedtobranched_relations_reindex()
+        return lift_relations + claw_relations + unbranchedtobranched_relations
+    
+    def convert_index(self, triple_sub_sup_exp):
+        (sub, sup, exp) = triple_sub_sup_exp
+        return exp * (sub + self.F.rank() * (sup - 1))         
                 
             
         
@@ -539,10 +605,12 @@ class Group_Trisection:
 
     # To get the group element in the big group corresponding to a pair
     # group_trisection_trefoil.big_group_F([group_trisection_trefoil.convert_index((-2, 3))])
-    def convert_index(self, pair_sub_sup):
-        (sub, sup) = pair_sub_sup
-        return sign(sub) * (abs(sub) + self.F.rank() * (sup - 1))
-        
+    #def convert_index(self, pair_sub_sup):
+    #    (sub, sup) = pair_sub_sup
+    #    return sign(sub) * (abs(sub) + self.F.rank() * (sup - 1))
+    def convert_index(self, triple_sub_sup_exp):
+        (sub, sup, exp) = triple_sub_sup_exp
+        return exp * (sub + self.F.rank() * (sup - 1))    
 
 test_F = FreeGroup(4)
 test_S = SymmetricGroup(3)
@@ -572,6 +640,7 @@ test_coloring.representation(test_relation)
 # new example of one of the tangles in the spun trefoil
 trefoil_F = FreeGroup(8)
 trefoil_S = SymmetricGroup(3)
+trefoil_cover_F=FreeGroup(8*3)
 # in our coloring of the spun trefoil,
 # first two points map to (1, 2), all of the others to (1, 3)
 trefoil_images_of_generators = ['(1, 2)', '(1, 2)', '(1, 3)', '(1, 3)', '(1, 3)', '(1, 3)', '(1, 3)', '(1, 3)']
