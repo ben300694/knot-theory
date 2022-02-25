@@ -9,11 +9,17 @@
 # from sage.interfaces.gap import get_gap_memory_pool_size, set_gap_memory_pool_size
 # set_gap_memory_pool_size(20000000000)
 
+# Constructing Baumslag-Solitar group BS(1,2)
+# with presentation < a, b >
 F := FreeGroup("a", "b");
 BS := F / [F.2*F.1*F.2^(-1)*F.1^(-2)];
 RelatorsOfFpGroup(BS);
 # [ b*a*b^-1*a^-2 ]
 
+# This is the presentation of a subgroup of BS(1, 2)
+# which we obtained from the trisected Reidemeister-Schreier algorithm
+# applied to a coloring of a 10-bridge trisection of
+# a ribbon disk of the stevedore knot
 subgr := Subgroup(BS, [BS.1^(-1)*BS.2*BS.1, BS.2*BS.1^(-1)]);
 # Group([ a^-1*b*a, b*a^-1 ])
 
