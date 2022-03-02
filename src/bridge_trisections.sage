@@ -9,8 +9,8 @@
 # finitely presented groups functionality
 # https://doc.sagemath.org/html/en/reference/groups/sage/groups/finitely_presented.html
 
-from sage.interfaces.gap import get_gap_memory_pool_size, set_gap_memory_pool_size
-set_gap_memory_pool_size(50000000000)
+#from sage.interfaces.gap import get_gap_memory_pool_size, set_gap_memory_pool_size
+#set_gap_memory_pool_size(50000000000)
 
 import copy
 
