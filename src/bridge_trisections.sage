@@ -451,17 +451,15 @@ class Colored_trivial_tangle:
         n=self.S.degree()
         g=self.F.rank()
         
-        #homomorphism rho sends the generator xi to rho[i]
-        #rho=['(1,2)','(1,2)','(1,3)','(1,3)','(1,3)','(1,3)','(1,3)','(1,3)']
-        #rho=['(1,2)','(1,2)','(1,2,3)','(1,2,3)','(1,2,3)','(1,2,3)','(1,4,5)','(1,4,5)']
+        
         #vertices p1,p2,p3,... note indexing starts at 1 to match symmetric group
 
-        #there is an edge from pi to pj
+        
 
 
         reachable=[1]
         remaining=[i for i in range(2,n+1)] #vertices remaining to be visited
-        #print('remaining',remaining)
+        print('remaining',remaining)
         claw_relations={1:[]}
 
 
@@ -474,14 +472,15 @@ class Colored_trivial_tangle:
                 for j in range(g): #j is the subscript of x_j.  
 
                     #Determine which vertices you can reach from current from each of the generators x_0,...,x_g-1
-                    #endpoint=self.S(rho[j])(current) 
+                   
                     
                     endpoint=self.representation(self.F([j+1]))(current)
 
                     #check if the endpoint vertex has been visited.  If not (i.e., if in remaining)...
                     if( endpoint in remaining):
                         #print("endpoint",endpoint)
-                        remaining.remove(endpoint) #don't visit this vertex again           
+                        remaining.remove(endpoint) #don't visit this vertex again  
+                        #print("remaining",remaining)
 
 
                         reachable.append(endpoint)
