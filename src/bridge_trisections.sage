@@ -527,23 +527,13 @@ class Colored_trivial_tangle:
         
         relations=[]
         for j in range(g): #go through all generators x_j
-            #image=self.representation(self.F([j]))
-            #startingvertex=1
-            #remainingvertices=[i for i in range(2,n+1)]
             
-            #endpoint=self.representation(self.F([j]))(1)
-            #relations.append([j,startingvertex])
-           # while !(endpoint=startingvertex):
-                
-               # endpoint=self.representation(self.F([j]))(endpoint)
-               # relations.append
                 
             cycles=self.representation(self.F([j+1])).cycle_tuples(singletons=True)
-            #basepoints=[]
+            
             
             for cycle in cycles:
-                #basepoints.append(cycle[0])
-                #k=len(cycle)
+                
                 cycle_relation=[]
                 for i in range(len(cycle)):
                     cycle_relation.append([j,cycle[i],1])
@@ -579,7 +569,8 @@ class Colored_trivial_tangle:
         return exp * (sub + self.F.rank() * (sup - 1))         
                 
             
-        
+    def handlebody_group(self):
+        return self.coverF.quotient(self.all_cover_relations())
     
  #   def reidemeister_schreier(self):
         #return lifted relations, claw relations, and branch relations together
