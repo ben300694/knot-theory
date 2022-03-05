@@ -459,7 +459,7 @@ class Colored_trivial_tangle:
 
         reachable=[1]
         remaining=[i for i in range(2,n+1)] #vertices remaining to be visited
-        print('remaining',remaining)
+        #print('remaining',remaining)
         claw_relations={1:[]}
 
 
