@@ -443,7 +443,9 @@ class Colored_trivial_tangle:
         
         return list_of_lifted_relations
     
-    def claw_relations_sub_sup_exp(self):
+    def claw_relations_endpt_sub_sup_exp_dict(self):
+        
+        #Returns a dictionary.  Each entry is of the form {endpoint,relation}.  When relation is lifted beginning at vertex 1, it ends at endpoint.  Relation is expressed as a list of triples [sub,sup,exp], corresponding to the generator (x_sub^sup)^exp, where exp=+/- 1
 
         #F=FreeGroup(g)
         #Free group with generators x0,x1,...,x(g-1)
@@ -499,12 +501,12 @@ class Colored_trivial_tangle:
 
         #print("final claw relations",claw_relations)
         
-        claw_relations_list=list(claw_relations.values())
+        #claw_relations_list=list(claw_relations.values())
         
-        return claw_relations_list
+        return claw_relations
     
     def claw_relations_reindex(self):
-        relations_sub_sup_exp=self.claw_relations_sub_sup_exp()
+        relations_sub_sup_exp=list(self.claw_relations_endpt_sub_sup_exp_dict().values())
         relations_list=[]
         for relation_sub_sup_exp in relations_sub_sup_exp:
             relation_reindexed=[]
@@ -571,9 +573,53 @@ class Colored_trivial_tangle:
     def handlebody_group(self):
         return self.coverF.quotient(self.all_cover_relations())
     
- #   def reidemeister_schreier(self):
-        #return lifted relations, claw relations, and branch relations together
+    def claw_collapse_hom(self):
+        #returns the map from coverF to itself determined by collapsing the claw
+         
+        images_list=[self.coverF([]) for i in range(rank(self.coverF))]
+        for sub in range(rank(self.F)):
+            for sup in range(1,self.S.degree()+1):
         
+                
+                generator_reindex_subscript=( (sub + self.F.rank() * (sup - 1)))
+                endpoint=self.representation(self.F([sub+1]))(sup)
+                claw_dict=self.claw_relations_endpt_sub_sup_exp_dict()
+                left_word_sub_sup_exp=claw_dict[sup]
+                left_word=[]
+                for gen in left_word_sub_sup_exp:
+                    left_word.append((( (gen[0] + self.F.rank() * (gen[1] - 1)))+1)*gen[2]+1) 
+                    
+                    #for each generator in the word, find its reindexed subscript. Add 1 because will use as index in free group.
+               
+                right_word_sub_sup_exp=self.claw_relations_endpt_sub_sup_exp_dict()[endpoint]
+                right_word=[]
+                for gen in right_word_sub_sup_exp:
+                    right_word.append((( (gen[0] + self.F.rank() * (gen[1] - 1)))+1)*gen[2]+1) 
+                    #for each generator in the word, find its reindexed subscript. Add 1 because will use as index in free group.
+                
+                generator_image=self.coverF(left_word)*self.coverF([generator_reindex_subscript+1])*self.coverF(right_word)^-1
+                images_list[generator_reindex_subscript]=generator_image
+                                            
+        hom=self.coverF.hom(images_list)
+        
+        return hom
+    
+    def covering_hom(self):
+        #returns the homomorphism from coverF to F induced by covering map, after claw collapse
+        images_list=[]
+        collapse_hom=self.claw_collapse_hom()
+        for g in range(rank(self.coverF)):
+            upstairs=list(collapse_hom.image(self.coverF([g+1])).Tietze())
+            
+            downstairs=[(((abs(x)-1) % rank(self.F))+1)*sign(x) for x in upstairs]
+            
+            images_list.append(self.F(downstairs))
+        hom=self.coverF.hom(images_list)
+        return hom
+            
+            
+    
+ 
         
         
         
