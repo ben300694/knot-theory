@@ -365,9 +365,15 @@ class Colored_punctured_surface:
         # construct homomorphism F --> S from the list images_of_generators
         self.representation = self.F.hom([self.S(g) for g in images_of_generators])
         self.coverF=FreeGroup(rank(self.F)*self.S.degree())
+        # punctured surface relation
+        self.relation=self.F([-i for i in range(1,rank(self.F)+1)])
         
     def __repr__(self) -> str:
         return str(self.__dict__)
+    
+    def is_representation(self):
+        #Check that surface relation is satisfied
+        return self.representation.image(self.relation)==self.S.identity()
     
     def claw_relations_endpt_sub_sup_exp_dict(self):
         
@@ -383,18 +389,16 @@ class Colored_punctured_surface:
         #vertices p1,p2,p3,... note indexing starts at 1 to match symmetric group
 
         
-
-
         reachable=[1]
         remaining=[i for i in range(2,n+1)] #vertices remaining to be visited
-        #print('remaining',remaining)
+        
         claw_relations={1:[]}
 
 
         while len(remaining)>0:
 
             for current in reachable:
-                #print("current",current)
+                
                 reachable.remove(current)
 
                 for j in range(g): #j is the subscript of x_j.  
@@ -406,29 +410,14 @@ class Colored_punctured_surface:
 
                     #check if the endpoint vertex has been visited.  If not (i.e., if in remaining)...
                     if( endpoint in remaining):
-                        #print("endpoint",endpoint)
+                        
                         remaining.remove(endpoint) #don't visit this vertex again  
-                        #print("remaining",remaining)
-
-
                         reachable.append(endpoint)
-
                         #next concatenate corresponding variable with current claw relation
-                        previous_subword=claw_relations[current].copy()
-                        #print('previous_subword',previous_subword)
-                        #print('new generator to add to subword',[j,current])              
+                        previous_subword=claw_relations[current].copy()                                    
                         claw_relations.update({endpoint: previous_subword})
                         claw_relations[endpoint].append([j,current,1])
 
-                        #print("remaining",remaining)
-                        #print("reachable",reachable)
-                        #print("claw_relations",claw_relations)
-
-
-        #print("final claw relations",claw_relations)
-        
-        #claw_relations_list=list(claw_relations.values())
-        
         return claw_relations
     
     def claw_relations_reindex(self):
@@ -527,7 +516,53 @@ class Colored_punctured_surface:
             images_list.append(self.F(downstairs))
         hom=self.coverF.hom(images_list)
         return hom
+    
+    def single_lift_relation_sub_sup_exp(self,starting_sheet):
+        current_sheet = starting_sheet
+        list_of_sheets = [starting_sheet]
+        for current_letter in self.relation.Tietze():
+            current_sheet = self.representation(self.F([current_letter]))(current_sheet)
+            list_of_sheets.append(current_sheet)
+        list_of_pairs = []        
+        for i, current_letter in enumerate(self.relation.Tietze()):
+            subscript = current_letter
+            if sign(current_letter) == +1:
+                superscript = list_of_sheets[i]
+            elif sign(current_letter) == -1:
+                superscript = list_of_sheets[i+1]
+            list_of_pairs.append((subscript, superscript))
+        list_of_triples=[]
+        for pair in list_of_pairs:
+            list_of_triples.append([abs(pair[0])-1,pair[1],sign(pair[0])]) #fixes off by one error in subscript, moves sign of exponent to third entry
+        #each triple is (superscript,subscript,exponent (+/-1))
+        return list_of_triples
+
+    def single_lift_relation_reindex(self, starting_sheet):
+        relationtriples=self.single_lift_relation_sub_sup_exp(starting_sheet)
+        rel=[]
+        for triple in relationtriples:
+            (sub, sup, exp) = triple
+            new_subscript= (( (sub + self.F.rank() * (sup - 1)))+1)*exp
             
+            rel.append(new_subscript)
+        return self.coverF(rel)
+    
+    def lift_relation_reindex(self):
+        list_of_lifted_relations=[]
+        rel=self.relation
+        # self.S.degree() is the rank of the symmetric group = number of sheets
+        for i in range(0, self.S.degree()):
+            rel_lifted = self.single_lift_relation_reindex(i+1)
+            # i+1 because sheets are indexed starting from 1
+            list_of_lifted_relations.append(rel_lifted)
+        
+        return list_of_lifted_relations
+    
+    def pi_1_branched(self):
+        return self.coverF.quotient(self.unbranchedtobranched_relations_reindex()+self.claw_relations_reindex()+self.lift_relation_reindex())
+         
+    def pi_1_unbranched(self):
+        return self.coverF.quotient(self.claw_relations_reindex()+self.lift_relation_reindex())
     
 
 class Colored_trivial_tangle:
@@ -609,12 +644,7 @@ class Colored_trivial_tangle:
                 rel_lifted = self.lift_of_single_relation_sub_sup_exp(rel, i+1)
                 # i+1 because sheets are indexed starting from 1
                 list_of_lifted_relations.append(rel_lifted)
-        # TODO: Continue implementing this function
         
-        # Find the claw relations
-        
-        # n degree of the cover
-        # g number of generators of group 
         return list_of_lifted_relations
    
     def lift_relations_reindex(self):
