@@ -346,102 +346,28 @@ spun_trefoil = tau_l_T_2_b(0, 3)
 # incorporate them in the classes above later
 # # # # # # # # # # # # # # # # # # # # # #
 
-class Colored_trivial_tangle:
+class Colored_punctured_surface:
     """
     Attributes
     ----------
     F: Free group containing the generators (in our case x_0, ... x_{2b-1})
     S: Symmetric group used as the codomain for the coloring
-    relations: list of relations_source specifying the source group as a quotient of F
+    
     images_of_generators:
         list of elements of the symmetric group S specifying the images of the generators of F
         We are always assuming that the representation is transitive,
         so that we obtain a connected cover.
     """
-    def __init__(self, F: FreeGroup, S: SymmetricGroup, relations_source = [], images_of_generators = []):
-        self.F = F
-        self.S = S
-        
-        self.relations_source = relations_source
+    
+    def __init__(self, F: FreeGroup, S: SymmetricGroup, images_of_generators=[]):
+        self.F=F
+        self.S=S
         # construct homomorphism F --> S from the list images_of_generators
         self.representation = self.F.hom([self.S(g) for g in images_of_generators])
         self.coverF=FreeGroup(rank(self.F)*self.S.degree())
-
+        
     def __repr__(self) -> str:
         return str(self.__dict__)
-
-    def lift_of_single_relation_sub_sup_exp(self, relation, starting_sheet):
-        """
-        Computes the attaching circle for the lift of a 2-cell,
-        with the basepoint in the starting_sheet
-
-        Returns a list of pairs, with each element giving (subscript, superscript)
-        in the lifted relation (following Fox' notation convention)
-
-        relation: word in a FreeGroup
-        starting_sheet: index of the lift of the basepoint where the lift of the curve is starting 
-        """
-        # Test the function by calling
-        # test_coloring.lift_of_single_relation(test_relation, 1)
-        current_sheet = starting_sheet
-        list_of_sheets = [starting_sheet]
-        for current_letter in relation.Tietze():
-            #print("current_letter =", current_letter)
-            #print("permutation of current letter =", self.representation(self.F([current_letter])))
-            current_sheet = self.representation(self.F([current_letter]))(current_sheet)
-            list_of_sheets.append(current_sheet)
-            #print("current list_of_sheets =", list_of_sheets)
-        # try to find subscripts and superscripts, save them as a list of pairs
-        list_of_pairs = []        
-        for i, current_letter in enumerate(relation.Tietze()):
-            subscript = current_letter
-            if sign(current_letter) == +1:
-                superscript = list_of_sheets[i]
-            elif sign(current_letter) == -1:
-                superscript = list_of_sheets[i+1]
-            list_of_pairs.append((subscript, superscript))
-        list_of_triples=[]
-        for pair in list_of_pairs:
-            list_of_triples.append([abs(pair[0])-1,pair[1],sign(pair[0])]) #fixes off by one error in subscript, moves sign of exponent to third entry
-        #each triple is (superscript,subscript,exponent (+/-1))
-        return list_of_triples
-    
-    def lift_of_single_relation_reindex(self, relation, starting_sheet):
-        relationtriples=self.lift_of_single_relation_sub_sup_exp(relation, starting_sheet)
-        relation=[]
-        for triple in relationtriples:
-            (sub, sup, exp) = triple
-            new_subscript= (( (sub + self.F.rank() * (sup - 1)))+1)*exp
-            
-            relation.append(new_subscript)
-        return self.coverF(relation)
-            
-    def lift_relations_sub_sup_exp(self):
-        list_of_lifted_relations = []
-        for rel in self.relations_source:
-            # self.S.degree() is the rank of the symmetric group = number of sheets
-            for i in range(0, self.S.degree()):
-                rel_lifted = self.lift_of_single_relation_sub_sup_exp(rel, i+1)
-                # i+1 because sheets are indexed starting from 1
-                list_of_lifted_relations.append(rel_lifted)
-        # TODO: Continue implementing this function
-        
-        # Find the claw relations
-        
-        # n degree of the cover
-        # g number of generators of group 
-        return list_of_lifted_relations
-   
-    def lift_relations_reindex(self):
-        list_of_lifted_relations=[]
-        for rel in self.relations_source:
-            # self.S.degree() is the rank of the symmetric group = number of sheets
-            for i in range(0, self.S.degree()):
-                 rel_lifted = self.lift_of_single_relation_reindex(rel, i+1)
-                 # i+1 because sheets are indexed starting from 1
-                 list_of_lifted_relations.append(rel_lifted)
-        
-        return list_of_lifted_relations
     
     def claw_relations_endpt_sub_sup_exp_dict(self):
         
@@ -558,21 +484,6 @@ class Colored_trivial_tangle:
             group_relations_list.append(self.coverF(reln))
         return group_relations_list
     
-    
-    def all_cover_relations(self):
-        lift_relations=self.lift_relations_reindex()
-        claw_relations=self.claw_relations_reindex()
-        unbranchedtobranched_relations=self.unbranchedtobranched_relations_reindex()
-        return lift_relations + claw_relations + unbranchedtobranched_relations
-    
-    def convert_index(self, triple_sub_sup_exp):
-        (sub, sup, exp) = triple_sub_sup_exp
-        return exp * (sub + self.F.rank() * (sup - 1))         
-                
-            
-    def handlebody_group(self):
-        return self.coverF.quotient(self.all_cover_relations())
-    
     def claw_collapse_hom(self):
         #returns the map from coverF to itself determined by collapsing the claw
          
@@ -617,6 +528,124 @@ class Colored_trivial_tangle:
         hom=self.coverF.hom(images_list)
         return hom
             
+    
+
+class Colored_trivial_tangle:
+    """
+    Attributes
+    ----------
+    F: Free group containing the generators (in our case x_0, ... x_{2b-1})
+    S: Symmetric group used as the codomain for the coloring
+    relations: list of relations_source specifying the source group as a quotient of F
+    images_of_generators:
+        list of elements of the symmetric group S specifying the images of the generators of F
+        We are always assuming that the representation is transitive,
+        so that we obtain a connected cover.
+    """
+    def __init__(self, F: FreeGroup, S: SymmetricGroup, relations_source = [], images_of_generators = []):
+        self.F = F
+        self.S = S
+        
+        self.relations_source = relations_source
+        # construct homomorphism F --> S from the list images_of_generators
+        self.representation = self.F.hom([self.S(g) for g in images_of_generators])
+        self.coverF=FreeGroup(rank(self.F)*self.S.degree())
+        self.surface=Colored_punctured_surface(self.F,self.S,images_of_generators)
+
+    def __repr__(self) -> str:
+        return str(self.__dict__)
+
+    def lift_of_single_relation_sub_sup_exp(self, relation, starting_sheet):
+        """
+        Computes the attaching circle for the lift of a 2-cell,
+        with the basepoint in the starting_sheet
+
+        Returns a list of pairs, with each element giving (subscript, superscript)
+        in the lifted relation (following Fox' notation convention)
+
+        relation: word in a FreeGroup
+        starting_sheet: index of the lift of the basepoint where the lift of the curve is starting 
+        """
+        # Test the function by calling
+        # test_coloring.lift_of_single_relation(test_relation, 1)
+        current_sheet = starting_sheet
+        list_of_sheets = [starting_sheet]
+        for current_letter in relation.Tietze():
+            #print("current_letter =", current_letter)
+            #print("permutation of current letter =", self.representation(self.F([current_letter])))
+            current_sheet = self.representation(self.F([current_letter]))(current_sheet)
+            list_of_sheets.append(current_sheet)
+            #print("current list_of_sheets =", list_of_sheets)
+        # try to find subscripts and superscripts, save them as a list of pairs
+        list_of_pairs = []        
+        for i, current_letter in enumerate(relation.Tietze()):
+            subscript = current_letter
+            if sign(current_letter) == +1:
+                superscript = list_of_sheets[i]
+            elif sign(current_letter) == -1:
+                superscript = list_of_sheets[i+1]
+            list_of_pairs.append((subscript, superscript))
+        list_of_triples=[]
+        for pair in list_of_pairs:
+            list_of_triples.append([abs(pair[0])-1,pair[1],sign(pair[0])]) #fixes off by one error in subscript, moves sign of exponent to third entry
+        #each triple is (superscript,subscript,exponent (+/-1))
+        return list_of_triples
+    
+    def lift_of_single_relation_reindex(self, relation, starting_sheet):
+        relationtriples=self.lift_of_single_relation_sub_sup_exp(relation, starting_sheet)
+        relation=[]
+        for triple in relationtriples:
+            (sub, sup, exp) = triple
+            new_subscript= (( (sub + self.F.rank() * (sup - 1)))+1)*exp
+            
+            relation.append(new_subscript)
+        return self.coverF(relation)
+            
+    def lift_relations_sub_sup_exp(self):
+        list_of_lifted_relations = []
+        for rel in self.relations_source:
+            # self.S.degree() is the rank of the symmetric group = number of sheets
+            for i in range(0, self.S.degree()):
+                rel_lifted = self.lift_of_single_relation_sub_sup_exp(rel, i+1)
+                # i+1 because sheets are indexed starting from 1
+                list_of_lifted_relations.append(rel_lifted)
+        # TODO: Continue implementing this function
+        
+        # Find the claw relations
+        
+        # n degree of the cover
+        # g number of generators of group 
+        return list_of_lifted_relations
+   
+    def lift_relations_reindex(self):
+        list_of_lifted_relations=[]
+        for rel in self.relations_source:
+            # self.S.degree() is the rank of the symmetric group = number of sheets
+            for i in range(0, self.S.degree()):
+                 rel_lifted = self.lift_of_single_relation_reindex(rel, i+1)
+                 # i+1 because sheets are indexed starting from 1
+                 list_of_lifted_relations.append(rel_lifted)
+        
+        return list_of_lifted_relations
+    
+   
+    def all_cover_relations(self):
+        lift_relations=self.lift_relations_reindex()
+        claw_relations=self.surface.claw_relations_reindex()
+        unbranchedtobranched_relations=self.surface.unbranchedtobranched_relations_reindex()
+        return lift_relations + claw_relations + unbranchedtobranched_relations
+    
+    def convert_index(self, triple_sub_sup_exp):
+        (sub, sup, exp) = triple_sub_sup_exp
+        return exp * (sub + self.F.rank() * (sup - 1))         
+                
+            
+    def handlebody_group(self):
+        return self.coverF.quotient(self.all_cover_relations())
+   
+    def handlebody_group_unbranched(self):
+        return self.coverF.quotient(self.lift_relations_reindex()+self.surface.claw_relations_reindex())
+    
             
     
  
