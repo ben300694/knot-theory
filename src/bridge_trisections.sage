@@ -480,24 +480,29 @@ class Colored_punctured_surface:
         for sub in range(rank(self.F)):
             for sup in range(1,self.S.degree()+1):
         
-                
+                print('generator sub,sup', sub, sup)
                 generator_reindex_subscript=( (sub + self.F.rank() * (sup - 1)))
                 endpoint=self.representation(self.F([sub+1]))(sup)
+                print('superscript, endpoint',sup,endpoint)
                 claw_dict=self.claw_relations_endpt_sub_sup_exp_dict()
                 left_word_sub_sup_exp=claw_dict[sup]
+                
                 left_word=[]
                 for gen in left_word_sub_sup_exp:
-                    left_word.append((( (gen[0] + self.F.rank() * (gen[1] - 1)))+1)*gen[2]+1) 
+                    left_word.append((( (gen[0] + self.F.rank() * (gen[1] - 1))))*gen[2]+1)
                     
                     #for each generator in the word, find its reindexed subscript. Add 1 because will use as index in free group.
-               
+                print('left word',self.coverF(left_word))
+                print(left_word_sub_sup_exp)
                 right_word_sub_sup_exp=self.claw_relations_endpt_sub_sup_exp_dict()[endpoint]
                 right_word=[]
                 for gen in right_word_sub_sup_exp:
-                    right_word.append((( (gen[0] + self.F.rank() * (gen[1] - 1)))+1)*gen[2]+1) 
+                    right_word.append((( (gen[0] + self.F.rank() * (gen[1] - 1))))*gen[2]+1) 
                     #for each generator in the word, find its reindexed subscript. Add 1 because will use as index in free group.
-                
+                print('right word',self.coverF(right_word))
+                print(right_word_sub_sup_exp)
                 generator_image=self.coverF(left_word)*self.coverF([generator_reindex_subscript+1])*self.coverF(right_word)^-1
+                print('generator image',generator_image)
                 images_list[generator_reindex_subscript]=generator_image
                                             
         hom=self.coverF.hom(images_list)
