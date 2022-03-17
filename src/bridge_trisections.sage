@@ -328,6 +328,57 @@ double_6_1.gre_tangle = Trivial_tangle(bridge_number=5,
                                                   braid_word=double_6_1_gre_tangle_braid_crossings_list,
                                                   strand_matching=double_6_1_gre_tangle_matching_list)
 
+#Representations to S_p for p odd
+
+#BS(1,2)=<A,B|BAB^-1=A^2>
+#homomorphism sending A-->a, B-->b, a, b in S_p where
+#a=(1,...,p) p odd
+#G=image subgroup
+
+
+def BS12_to_Sp(p):
+    S_p=SymmetricGroup(p)
+
+    a_list_br=[(i+1)%p+1 for i in range(p)] #p-cycle in bottom row notation
+    a_list_cycle=[(i+1) for i in range(p)]
+    a_dict={i+1:i+1 for i in range(p)}
+    a_sq_list=[(2*i)%p +1 for i in range(p)]
+    a_sq_inverse_dict={(2*i)%p +1:i+1 for i in range(p)} #inverse dictionary representing a^2 in cycle notation
+
+    b_list_br=[a_dict[a_sq_inverse_dict[i+1]] for i in range(p)] #b in bottom row notation
+
+    #convert lists to bottom-row notation and then symmetric group elements in cycle notation
+    a=S_p(Permutation(a_list_br)) 
+    b=S_p(Permutation(b_list_br))
+    
+    return [a,b]
+
+def double_6_1_colored_tangles(p):
+    stevedore_F = FreeGroup(10)
+    stevedore_S = SymmetricGroup(p)
+    
+    [a,b]=BS12_to_Sp(p)
+    g_1=a^-1*b
+    g_2=b
+
+    double_6_1_images_of_generators = [g_1,g_1^-1]+4*[g_2,g_2^-1]
+    
+    double_6_1_coloring_red = Colored_trivial_tangle(stevedore_F, stevedore_S, double_6_1.red_tangle.relations(), double_6_1_images_of_generators)
+    double_6_1_coloring_blu = Colored_trivial_tangle(stevedore_F, stevedore_S, double_6_1.blu_tangle.relations(), double_6_1_images_of_generators)
+    double_6_1_coloring_gre = Colored_trivial_tangle(stevedore_F, stevedore_S, double_6_1.gre_tangle.relations(), double_6_1_images_of_generators)
+    
+    return double_6_1_coloring_red, double_6_1_coloring_blu, double_6_1_coloring_gre
+
+def double_6_1_colored_surface(p):
+    stevedore_F = FreeGroup(10)
+    stevedore_S = SymmetricGroup(p)
+    
+    [a,b]=BS12_to_Sp(p)
+    g_1=a^-1*b
+    g_2=b
+
+    double_6_1_images_of_generators = [g_1,g_1^-1]+4*[g_2,g_2^-1]
+    return Colored_punctured_surface(stevedore_F,stevedore_S, double_6_1_images_of_generators)
 
 # # # # # # # # # # # # # # # # # # # # # #
 # 0-twist spin of the (2, 3) torus knot
@@ -480,10 +531,10 @@ class Colored_punctured_surface:
         for sub in range(rank(self.F)):
             for sup in range(1,self.S.degree()+1):
         
-                print('generator sub,sup', sub, sup)
+                
                 generator_reindex_subscript=( (sub + self.F.rank() * (sup - 1)))
                 endpoint=self.representation(self.F([sub+1]))(sup)
-                print('superscript, endpoint',sup,endpoint)
+                
                 claw_dict=self.claw_relations_endpt_sub_sup_exp_dict()
                 left_word_sub_sup_exp=claw_dict[sup]
                 
@@ -492,17 +543,15 @@ class Colored_punctured_surface:
                     left_word.append((( (gen[0] + self.F.rank() * (gen[1] - 1))))*gen[2]+1)
                     
                     #for each generator in the word, find its reindexed subscript. Add 1 because will use as index in free group.
-                print('left word',self.coverF(left_word))
-                print(left_word_sub_sup_exp)
+                
                 right_word_sub_sup_exp=self.claw_relations_endpt_sub_sup_exp_dict()[endpoint]
                 right_word=[]
                 for gen in right_word_sub_sup_exp:
                     right_word.append((( (gen[0] + self.F.rank() * (gen[1] - 1))))*gen[2]+1) 
                     #for each generator in the word, find its reindexed subscript. Add 1 because will use as index in free group.
-                print('right word',self.coverF(right_word))
-                print(right_word_sub_sup_exp)
+                
                 generator_image=self.coverF(left_word)*self.coverF([generator_reindex_subscript+1])*self.coverF(right_word)^-1
-                print('generator image',generator_image)
+                
                 images_list[generator_reindex_subscript]=generator_image
                                             
         hom=self.coverF.hom(images_list)
