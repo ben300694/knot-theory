@@ -489,19 +489,25 @@ class Colored_punctured_surface:
                 
                 left_word=[]
                 for gen in left_word_sub_sup_exp:
+                    # for each generator in the word, find its reindexed subscript.
+                    # Add 1 because will use as index in free group.
                     left_word.append((( (gen[0] + self.F.rank() * (gen[1] - 1))))*gen[2]+1)
                     
-                    #for each generator in the word, find its reindexed subscript. Add 1 because will use as index in free group.
+                    
                 print('left word',self.coverF(left_word))
                 print(left_word_sub_sup_exp)
                 right_word_sub_sup_exp=self.claw_relations_endpt_sub_sup_exp_dict()[endpoint]
                 right_word=[]
-                for gen in right_word_sub_sup_exp:
+                for gen in right_word_sub_sup_exp:              
+                    # for each generator in the word, find its reindexed subscript.
+                    # Add 1 because will use as index in free group.
                     right_word.append((( (gen[0] + self.F.rank() * (gen[1] - 1))))*gen[2]+1) 
-                    #for each generator in the word, find its reindexed subscript. Add 1 because will use as index in free group.
+                    
                 print('right word',self.coverF(right_word))
                 print(right_word_sub_sup_exp)
-                generator_image=self.coverF(left_word)*self.coverF([generator_reindex_subscript+1])*self.coverF(right_word)^-1
+                generator_image = self.coverF(left_word) * \
+                                    self.coverF([generator_reindex_subscript+1]) * \
+                                        self.coverF(right_word)^-1
                 print('generator image',generator_image)
                 images_list[generator_reindex_subscript]=generator_image
                                             
@@ -538,8 +544,10 @@ class Colored_punctured_surface:
             list_of_pairs.append((subscript, superscript))
         list_of_triples=[]
         for pair in list_of_pairs:
-            list_of_triples.append([abs(pair[0])-1,pair[1],sign(pair[0])]) #fixes off by one error in subscript, moves sign of exponent to third entry
-        #each triple is (superscript,subscript,exponent (+/-1))
+            # fixes off by one error in subscript,
+            # moves sign of exponent to third entry
+            # each triple is (superscript,subscript,exponent (+/-1))
+            list_of_triples.append([abs(pair[0])-1,pair[1],sign(pair[0])]) 
         return list_of_triples
 
     def single_lift_relation_reindex(self, starting_sheet):
@@ -569,7 +577,7 @@ class Colored_punctured_surface:
     def pi_1_unbranched(self):
         return self.coverF.quotient(self.claw_relations_reindex()+self.lift_relation_reindex())
     
-
+    
 class Colored_trivial_tangle:
     """
     Attributes
@@ -589,8 +597,8 @@ class Colored_trivial_tangle:
         self.relations_source = relations_source
         # construct homomorphism F --> S from the list images_of_generators
         self.representation = self.F.hom([self.S(g) for g in images_of_generators])
-        self.coverF=FreeGroup(rank(self.F)*self.S.degree())
-        self.surface=Colored_punctured_surface(self.F,self.S,images_of_generators)
+        self.coverF = FreeGroup(self.F.rank() * self.S.degree())
+        self.surface = Colored_punctured_surface(self.F,self.S,images_of_generators)
 
     def __repr__(self) -> str:
         return str(self.__dict__)
@@ -627,7 +635,9 @@ class Colored_trivial_tangle:
             list_of_pairs.append((subscript, superscript))
         list_of_triples=[]
         for pair in list_of_pairs:
-            list_of_triples.append([abs(pair[0])-1,pair[1],sign(pair[0])]) #fixes off by one error in subscript, moves sign of exponent to third entry
+            # fixes off by one error in subscript,
+            # moves sign of exponent to third entry
+            list_of_triples.append([abs(pair[0])-1,pair[1],sign(pair[0])])
         #each triple is (superscript,subscript,exponent (+/-1))
         return list_of_triples
     
@@ -679,79 +689,69 @@ class Colored_trivial_tangle:
         return self.coverF.quotient(self.all_cover_relations())
    
     def handlebody_group_unbranched(self):
-        return self.coverF.quotient(self.lift_relations_reindex()+self.surface.claw_relations_reindex())
+        return self.coverF.quotient(self.lift_relations_reindex() + self.surface.claw_relations_reindex())
     
             
-    
- 
-        
-        
-        
-        
-        
-        # We can integrate it into the python classes later
-        
-
-#class Colored_bridge_trisection:
-    
-    
-    
-class Group_Trisection:
-    def __init__(self, F: FreeGroup, S: SymmetricGroup, C: Colored_trivial_tangle):
+class Colored_bridge_trisection:
+    def __init__(self, F: FreeGroup, S: SymmetricGroup, tangles_dict, images_of_generators):
+        """
+        Parameters:
+            tangles_dict: dictionary of trivial tangles; will get assigned the coloring determined by
+                            images_of_generators
+            images_of_generators: list of images of the puncture generators in the symmetric group 
+        """
         self.F = F
         self.S = S
-        self.C = C
-        self.big_group_F = FreeGroup(self.F.rank() * self.S.degree())
+        
+        self.coverF = FreeGroup(self.F.rank() * self.S.degree())
+        
+        self.colored_tangles = {}
+        for (key, value) in tangles_dict.items():
+            self.colored_tangles[key] = Colored_trivial_tangle(self.F, 
+                                                               self.S, 
+                                                               value.relations(), 
+                                                               images_of_generators)
+        
+        return
+    
+    def pi_1_branched_cover(self):
+        all_relations = []
+        for colored_tangle in colored_trefoil.colored_tangles.values():
+            # print(colored_tangle.all_cover_relations())
+            # group of branched cover of handlebody:
+            # print(colored_tangle.coverF.quotient(colored_tangle.all_cover_relations()))
+            all_relations.extend(colored_tangle.all_cover_relations())
+        
+        # print(all_relations)
+        pi_1_branched_cover = self.coverF.quotient(all_relations)
+        return pi_1_branched_cover
+    
+    def pi_1_unbranched_cover(self):
+        all_relations = []
+        for colored_tangle in colored_trefoil.colored_tangles.values():
+            # print(colored_tangle.all_cover_relations())
+            # group of branched cover of handlebody:
+            # print(colored_tangle.coverF.quotient(colored_tangle.all_cover_relations()))
+            all_relations.extend(colored_tangle.surface.claw_relations_reindex())
+            all_relations.extend(colored_tangle.lift_relations_reindex())
+        
+        # print(all_relations)
+        pi_1_branched_cover = self.coverF.quotient(all_relations)
+        return pi_1_branched_cover
+    
+    def check_pi_1_branched_cover_3_manifolds_free(self):
+        colored_tangles_list = list(self.colored_tangles)
 
-    # To get the group element in the big group corresponding to a pair
-    # group_trisection_trefoil.big_group_F([group_trisection_trefoil.convert_index((-2, 3))])
-    #def convert_index(self, pair_sub_sup):
-    #    (sub, sup) = pair_sub_sup
-    #    return sign(sub) * (abs(sub) + self.F.rank() * (sup - 1))
-    def convert_index(self, triple_sub_sup_exp):
-        (sub, sup, exp) = triple_sub_sup_exp
-        return exp * (sub + self.F.rank() * (sup - 1))    
+        consecutive_pairs_keys = [(colored_tangles_list[-1], colored_tangles_list[0])] \
+                                    + [(colored_tangles_list[i], colored_tangles_list[i + 1])
+                                            for i in range(len(list(colored_tangles_list)) - 1)]
 
-test_F = FreeGroup(4)
-test_S = SymmetricGroup(3)
-# Suppose S is the symmetric group
-# We can act by elements of the symmetric group by writing
-# S('(1, 2)')(1), the result is 2
-# Another example:
-# test_hom(test_F([1]))(1) is the action of the image of x0 on the number '1'
-
-# Write down list with images of generators of F in the symmetric group
-test_images_of_generators = ['(1, 2)', '(1, 2)', '(2, 3)', '(2, 3)']
-
-# Relation in the handwritting notes from 2021-12-03 that we can
-# test the implementation of the Reidemeister-Schreier algorithm on
-# to obtain the word in the free group
-test_relation = test_F([2, -4, 1, 3])
-
-# can get the list of indices determining the word via test_relation.Tietze()
-
-# Constructing an example coloring to test our functions on
-test_coloring = Colored_trivial_tangle(test_F, test_S, [test_relation], test_images_of_generators)
-
-# Compute the image of test_relation under the homomorphism
-test_coloring.representation(test_relation)
-
-
-# new example of one of the tangles in the spun trefoil
-trefoil_F = FreeGroup(8)
-trefoil_S = SymmetricGroup(3)
-trefoil_cover_F=FreeGroup(8*3)
-# in our coloring of the spun trefoil,
-# first two points map to (1, 2), all of the others to (1, 3)
-trefoil_images_of_generators = ['(1, 2)', '(1, 2)', '(1, 3)', '(1, 3)', '(1, 3)', '(1, 3)', '(1, 3)', '(1, 3)']
-
-trefoil_relation = trefoil_F([1, 6, 1, -6, -1, 3])
-trefoil_coloring = Colored_trivial_tangle(trefoil_F, trefoil_S, spun_trefoil.red_tangle.relations(), trefoil_images_of_generators)
-# test the function to relation
-# trefoil_coloring.lift_of_single_relation(trefoil_relation, 1)
-# test the function on all relations of red tangle
-# trefoil_coloring.reidemeister_schreier()
-
-group_trisection_trefoil = Group_Trisection(trefoil_F, trefoil_S, trefoil_coloring)
-
+        for first, second in consecutive_pairs_keys:
+            rels = self.colored_tangles[first].all_cover_relations() + \
+                        self.colored_tangles[second].all_cover_relations()
+            group = self.coverF.quotient(rels)
+            if group.simplified().relations() != ():
+                print(False)
+                continue
+            print(True)
 
