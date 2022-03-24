@@ -353,6 +353,14 @@ def BS12_to_Sp(p):
     
     return [a,b]
 
+def double_6_1_images_of_generators(p):
+    [a,b]=BS12_to_Sp(p)
+    g_1=a^-1*b
+    g_2=b
+
+    double_6_1_images_of_generators = [g_1,g_1^-1]+4*[g_2,g_2^-1]
+    return double_6_1_images_of_generators
+
 def double_6_1_colored_tangles(p):
     stevedore_F = FreeGroup(10)
     stevedore_S = SymmetricGroup(p)
@@ -739,7 +747,20 @@ class Colored_trivial_tangle:
             
     def handlebody_group(self):
         return self.coverF.quotient(self.all_cover_relations())
+    
+    def check_handlebody_group_is_free(self):
+        group=self.handlebody_group()
+        is_free=True
+        if group.simplified().relations() != ():
+            is_free=False
+            
+        return is_free
    
+    def handlebody_genus(self):
+        group=self.handlebody_group()
+        Z_factors=group.abelian_invariants()
+        return len(Z_factors)
+    
     def handlebody_group_unbranched(self):
         return self.coverF.quotient(self.lift_relations_reindex() + self.surface.claw_relations_reindex())
     
@@ -763,6 +784,7 @@ class Colored_bridge_trisection:
                                                                self.S, 
                                                                value.relations(), 
                                                                images_of_generators)
+        self.surface = Colored_punctured_surface(self.F,self.S,images_of_generators)
         
         return
     
