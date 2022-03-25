@@ -637,6 +637,10 @@ class Colored_punctured_surface:
     def pi_1_unbranched(self):
         return self.coverF.quotient(self.claw_relations_reindex()+self.lift_relation_reindex())
     
+    def genus_branched_cover(self):
+        pi_1=self.pi_1_branched()
+        return len(pi_1.abelian_invariants())/2
+    
     
 class Colored_trivial_tangle:
     """
@@ -790,7 +794,7 @@ class Colored_bridge_trisection:
     
     def pi_1_branched_cover(self):
         all_relations = []
-        for colored_tangle in colored_trefoil.colored_tangles.values():
+        for colored_tangle in self.colored_tangles.values():
             # print(colored_tangle.all_cover_relations())
             # group of branched cover of handlebody:
             # print(colored_tangle.coverF.quotient(colored_tangle.all_cover_relations()))
@@ -802,7 +806,7 @@ class Colored_bridge_trisection:
     
     def pi_1_unbranched_cover(self):
         all_relations = []
-        for colored_tangle in colored_trefoil.colored_tangles.values():
+        for colored_tangle in self.colored_tangles.values():
             # print(colored_tangle.all_cover_relations())
             # group of branched cover of handlebody:
             # print(colored_tangle.coverF.quotient(colored_tangle.all_cover_relations()))
@@ -812,6 +816,21 @@ class Colored_bridge_trisection:
         # print(all_relations)
         pi_1_branched_cover = self.coverF.quotient(all_relations)
         return pi_1_branched_cover
+    
+    def pi_1_branched_cover_3_manifolds(self):
+        colored_tangles_list = list(self.colored_tangles)
+
+        consecutive_pairs_keys = [(colored_tangles_list[-1], colored_tangles_list[0])] \
+                                    + [(colored_tangles_list[i], colored_tangles_list[i + 1])
+                                            for i in range(len(list(colored_tangles_list)) - 1)]
+        
+        groups_dict={}
+        for first, second in consecutive_pairs_keys:
+            rels = self.colored_tangles[first].all_cover_relations() + \
+                        self.colored_tangles[second].all_cover_relations()
+            group = self.coverF.quotient(rels)
+            groups_dict[(first, second)]=group
+        return groups_dict
     
     def check_pi_1_branched_cover_3_manifolds_free(self):
         colored_tangles_list = list(self.colored_tangles)
@@ -828,4 +847,27 @@ class Colored_bridge_trisection:
                 print(False)
                 continue
             print(True)
+            
+    def trisection_parameters_branched_cover(self):
+        groups_dict=self.pi_1_branched_cover_3_manifolds()
+        handlebody_genus_list_4D=[]
+        for (key, group) in groups_dict.items():
+            handlebody_genus_list_4D.append(len(group.abelian_invariants()))
+        
+        handlebody_genus_list_3D=[]
+        for (key,tangle) in self.colored_tangles.items():
+            handlebody_genus_list_3D.append(tangle.handlebody_genus())
+       
+        g=self.surface.genus_branched_cover()
+        match=True
+        for i in range(len(handlebody_genus_list_3D) ):
+            if handlebody_genus_list_3D[i]!= g:
+                print('Parameter mismatch: 3D-handlebody genus')
+                match=False
+        if match==True:
+            return [g,handlebody_genus_list_4D]
+        
+        
+        
+            
 
