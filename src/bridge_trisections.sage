@@ -870,6 +870,8 @@ class Colored_bridge_trisection:
         for i in range(len(handlebody_genus_list_3D) ):
             if handlebody_genus_list_3D[i]!= g:
                 print('Parameter mismatch: 3D-handlebody genus')
+                print('Handlebody genera:', handlebody_genus_list_3D)
+                print('Core surface genus:',g)
                 match=False
         if match==True:
             return [g,handlebody_genus_list_4D]
