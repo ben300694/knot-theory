@@ -533,7 +533,7 @@ class Colored_punctured_surface:
         return group_relations_list
     
     def claw_collapse_hom(self):
-        #returns the map from coverF to itself determined by collapsing the claw
+        #returns the homomorphism from self.pi_1_unbranched() to itself determined by collapsing the claw
          
         images_list=[self.coverF([]) for i in range(rank(self.coverF))]
         for sub in range(rank(self.F)):
@@ -559,34 +559,41 @@ class Colored_punctured_surface:
                     # for each generator in the word, find its reindexed subscript.
                     # Add 1 because will use as index in free group.
                     right_word.append((( (gen[0] + self.F.rank() * (gen[1] - 1))))*gen[2]+1) 
-                #generator_image=self.coverF(left_word)*self.coverF([generator_reindex_subscript+1])*self.coverF(right_word)^-1
-           
+                
                                         
                 
-
                     
-                generator_image = self.coverF(left_word) * \
-                                    self.coverF([generator_reindex_subscript+1]) * \
-                                        self.coverF(right_word)^-1
+                #generator_image = self.coverF(left_word) * \
+                #                    self.coverF([generator_reindex_subscript+1]) * \
+                #                        self.coverF(right_word)^-1
+                generator_image = self.pi_1_unbranched()(left_word) * \
+                                    self.pi_1_unbranched()([generator_reindex_subscript+1]) * \
+                                        self.pi_1_unbranched()(right_word)^-1
                
                 images_list[generator_reindex_subscript]=generator_image
                                             
-        hom=self.coverF.hom(images_list)
+        #hom=self.coverF.hom(images_list)
+        hom=self.pi_1_unbranched().hom(images_list)
         
         return hom
     
+    def pi_1_punctured_sphere(self):
+        return self.F.quotient([self.relation])
+    
     def covering_hom(self):
-        #returns the homomorphism from coverF to F induced by covering map, after claw collapse
+        #returns the homomorphism from self.pi_1_unbranched() to self.pi_1_punctured_sphere() induced by covering map, after claw collapse
         images_list=[]
         collapse_hom=self.claw_collapse_hom()
         for g in range(rank(self.coverF)):
-            upstairs=list(collapse_hom.image(self.coverF([g+1])).Tietze())
+            upstairs=list(collapse_hom.image(self.pi_1_unbranched()([g+1])).Tietze())
             
             downstairs=[(((abs(x)-1) % rank(self.F))+1)*sign(x) for x in upstairs]
             
-            images_list.append(self.F(downstairs))
-        hom=self.coverF.hom(images_list)
+            images_list.append(self.pi_1_punctured_sphere()(downstairs))
+        hom=self.pi_1_unbranched().hom(images_list)
         return hom
+    
+    
     
     def single_lift_relation_sub_sup_exp(self,starting_sheet):
         current_sheet = starting_sheet
