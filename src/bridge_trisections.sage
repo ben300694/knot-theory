@@ -883,21 +883,7 @@ class Colored_bridge_trisection:
             return [g,handlebody_genus_list_4D]
 
         
-    #Determine the presentation matrix corresponding to the abelianization of a finitely presented group
-    def presentation_matrix(F,relations):
-        num_gens=rank(F)
-        num_relns=len(relations)
-    
-        presentation_matrix=[[0 for j in range(num_relns)] for i in range(num_gens)]
-        for j in range(num_relns):
-            reln=relations[j]
-            subscript_list=reln.Tietze()
-    
-            for k in range(len(subscript_list)):
-        
-                presentation_matrix[abs(subscript_list[k])-1][j]+=sgn(subscript_list[k])
-        return matrix(presentation_matrix)  
-    
+
     
     def H_1_handlebodies(self):
         groups_dict=self.pi_1_branched_cover_handlebodies()
@@ -1011,7 +997,21 @@ class Colored_bridge_trisection:
         
             
         
-                     
+#Determine the presentation matrix corresponding to the abelianization of a finitely presented group
+def presentation_matrix(F,relations):
+    num_gens=rank(F)
+    num_relns=len(relations)
+    
+    presentation_matrix=[[0 for j in range(num_relns)] for i in range(num_gens)]
+    for j in range(num_relns):
+        reln=relations[j]
+        subscript_list=reln.Tietze()
+    
+        for k in range(len(subscript_list)):
+        
+            presentation_matrix[abs(subscript_list[k])-1][j]+=sgn(subscript_list[k])
+    return matrix(presentation_matrix)  
+                 
         
         
         
