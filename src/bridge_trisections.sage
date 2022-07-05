@@ -824,6 +824,12 @@ class Colored_bridge_trisection:
         pi_1_branched_cover = self.coverF.quotient(all_relations)
         return pi_1_branched_cover
     
+    def pi_1_branched_cover_handlebodies(self):
+        groups_dict={}
+        for (key,value) in self.colored_tangles.items():            
+            groups_dict.update({key:value.handlebody_group()})
+        return groups_dict
+    
     def pi_1_branched_cover_3_manifolds(self):
         colored_tangles_list = list(self.colored_tangles)
 
@@ -875,6 +881,138 @@ class Colored_bridge_trisection:
                 match=False
         if match==True:
             return [g,handlebody_genus_list_4D]
+
+        
+    #Determine the presentation matrix corresponding to the abelianization of a finitely presented group
+    def presentation_matrix(F,relations):
+        num_gens=rank(F)
+        num_relns=len(relations)
+    
+        presentation_matrix=[[0 for j in range(num_relns)] for i in range(num_gens)]
+        for j in range(num_relns):
+            reln=relations[j]
+            subscript_list=reln.Tietze()
+    
+            for k in range(len(subscript_list)):
+        
+                presentation_matrix[abs(subscript_list[k])-1][j]+=sgn(subscript_list[k])
+        return matrix(presentation_matrix)  
+    
+    
+    def H_1_handlebodies(self):
+        groups_dict=self.pi_1_branched_cover_handlebodies()
+        p_matrix_dict={}
+        H_1_dict={}
+        
+        
+        free_module=span(matrix.identity(rank(self.coverF)).columns())
+        
+        for (key,group) in groups_dict.items():
+            
+            p_matrix_dict.update({key:presentation_matrix(self.coverF,group.relations())})
+        
+        for (key, group) in groups_dict.items():
+            
+            
+            relation_submodule=span(p_matrix_dict[key].columns())
+            H_1_module=free_module/relation_submodule
+            H_1_dict.update({key:H_1_module})
+        return free_module, H_1_dict
+    
+    
+    
+    def inclusion_maps_tripod(self):
+        free_module=self.H_1_handlebodies()[0]
+        groups_dict=self.H_1_handlebodies()[1] 
+        
+        
+        surface_relation_submodule=span(presentation_matrix(self.coverF,self.surface.pi_1_branched().relations()).columns())
+        
+        surface_module=free_module/surface_relation_submodule
+                         
+        
+        
+        #in order to construct morphisms from central surface to each handlebody, 
+        #need the free module presented as a trivial quotient of itself
+
+        zero_vector=[0 for i in range(rank(self.coverF))]
+        trivial_module=free_module.span([zero_vector])
+        free_module_quotient_form=free_module/trivial_module
+        surface_quotient_map=free_module_quotient_form.hom([surface_module(free_module_quotient_form.gen(i))for i in range(rank(self.coverF))])
+
+        
+        inclusion_dict={}
+        
+        for (key,group) in groups_dict.items():
+            quotient_map=free_module_quotient_form.hom([groups_dict[key](free_module_quotient_form.gen(i)) for i in range(rank(self.coverF))])
+            
+            
+            inclusion_map=surface_module.hom([quotient_map(surface_quotient_map.lift(gen)) for gen in surface_module.gens()])
+                  
+            inclusion_dict.update({key:inclusion_map})
+                     
+        return inclusion_dict
+    
+    def lagrangians(self):
+        inclusion_dict=self.inclusion_maps_tripod()
+        lag_dict={}
+        for (key, value) in inclusion_dict.items():
+            lag_dict.update({key:value.kernel()})
+        return lag_dict
+            
+    
+    def H_2_branched_cover(self):
+        inclusion_maps_dict=self.inclusion_maps_tripod()
+        
+        #Cannot compute intersection of submodules of finitely generated modules
+        #To intersect the Lagrangians, re-build each as a submodule of a free module
+        
+        
+        free_module=self.H_1_handlebodies()[0]
+        surface_relation_submodule=span(presentation_matrix(self.coverF,self.surface.pi_1_branched().relations()).columns())
+        
+        surface_module=free_module/surface_relation_submodule
+        surface_free=ZZ^len(surface_module.gens())
+        
+        #in order to construct morphisms from central surface to each handlebody, 
+        #need the free module presented as a trivial quotient of itself
+
+        zero_vector=[0 for i in range(rank(self.coverF))]
+        trivial_module=free_module.span([zero_vector])
+        free_module_quotient_form=free_module/trivial_module
+        surface_quotient_map=free_module_quotient_form.hom([surface_module(free_module_quotient_form.gen(i))for i in range(rank(self.coverF))])
+        
+        
+        #Express basis for each Lagriangian (kernel of inclusion map into handlebody) in terms of surface module basis
+        
+        lag_surface_basis_dict={}
+        
+        for (key,value) in inclusion_maps_dict.items():
+            lag_surface_module_basis=[]
+            for k in value.kernel().gens():
+                lag_surface_module_basis.append(surface_quotient_map(surface_quotient_map.lift(k)))
+                
+            lag=surface_free.span([list(lag_surface_module_basis[i]) for i in range(len(lag_surface_module_basis))],ZZ)
+            lag_surface_basis_dict.update({key:lag})
+            
+            
+        sum_red_blu=lag_surface_basis_dict['red']+lag_surface_basis_dict['blu']
+        intersection_blu_gre=lag_surface_basis_dict['blu'].intersection(lag_surface_basis_dict['gre'])
+        intersection_gre_red=lag_surface_basis_dict['gre'].intersection(lag_surface_basis_dict['red'])
+        
+        
+        #https://arxiv.org/pdf/1711.04762.pdf Thm 3.6 p.9
+        
+        H_2_numerator=lag_surface_basis_dict['gre'].intersection(sum_red_blu)
+        
+        H_2_denominator=intersection_blu_gre+intersection_gre_red
+        
+        return H_2_numerator/H_2_denominator
+        
+            
+        
+                     
+        
         
         
         
