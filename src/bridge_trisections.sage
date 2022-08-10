@@ -862,7 +862,7 @@ class Colored_bridge_trisection:
             print(True)
             
     def trisection_parameters_branched_cover(self):
-        groups_dict=self.pi_1_branched_cover_3_manifolds()
+        groups_dict = self.pi_1_branched_cover_3_manifolds()
         handlebody_genus_list_4D=[]
         for (key, group) in groups_dict.items():
             handlebody_genus_list_4D.append(len(group.abelian_invariants()))
@@ -874,13 +874,13 @@ class Colored_bridge_trisection:
         g=self.surface.genus_branched_cover()
         match=True
         for i in range(len(handlebody_genus_list_3D) ):
-            if handlebody_genus_list_3D[i]!= g:
+            if handlebody_genus_list_3D[i] != g:
                 print('Parameter mismatch: 3D-handlebody genus')
                 print('Handlebody genera:', handlebody_genus_list_3D)
-                print('Core surface genus:',g)
+                print('Core surface genus:', g)
                 match=False
         if match==True:
-            return [g,handlebody_genus_list_4D]
+            return [g, handlebody_genus_list_4D]
 
         
 
@@ -940,10 +940,10 @@ class Colored_bridge_trisection:
         return inclusion_dict
     
     def lagrangians(self):
-        inclusion_dict=self.inclusion_maps_tripod()
-        lag_dict={}
+        inclusion_dict = self.inclusion_maps_tripod()
+        lag_dict = {}
         for (key, value) in inclusion_dict.items():
-            lag_dict.update({key:value.kernel()})
+            lag_dict.update({key : value.kernel()})
         return lag_dict
             
     
@@ -975,7 +975,7 @@ class Colored_bridge_trisection:
         
         for (key,value) in inclusion_maps_dict.items():
             lag_surface_module_basis=[]
-            for k in value.kernel().gens():
+            for k in value.right_kernel().gens():
                 lag_surface_module_basis.append(surface_quotient_map(surface_quotient_map.lift(k)))
                 
             lag=surface_free.span([list(lag_surface_module_basis[i]) for i in range(len(lag_surface_module_basis))],ZZ)
