@@ -693,7 +693,7 @@ class Colored_punctured_surface:
             sup=(abs(index)-1)//rank(self.F)+1 
             sign=sgn(index)
               
-            print(sub,sup,sign)
+            
             if i==0:
                 prev_index=cyclic_word.Tietze()[len(cyclic_word.Tietze())-1] 
             elif i!=0:
@@ -738,7 +738,7 @@ class Colored_punctured_surface:
                     #incoming and outgoing arrows have 4 distinct endpoints
                     
                     if len(set([in_1,in_2,out_1,out_2]))==4:
-                        print("case 4")
+                        #print("case 4")
                         if self.in_cyclic_order([in_1,out_2,out_1,in_2])==true:
                             local_intersection=1
                         elif self.in_cyclic_order([in_2,out_1,out_2,in_1])==true:
@@ -758,7 +758,7 @@ class Colored_punctured_surface:
                     #incoming and outgoing arrows have 3 distinct endpoints
                     
                     elif len(set([in_1,in_2,out_1,out_2]))==3:
-                        print("case 3")
+                        #print("case 3")
                         
                         if out_1==out_2:
                             if self.in_cyclic_order([in_2,in_1,out_1])==true:
@@ -800,7 +800,7 @@ class Colored_punctured_surface:
                     #incoming and outgoing arrows have 2 distinct endpoints
                     
                     elif len(set([in_1,in_2,out_1,out_2]))==2:
-                        print("case 2")
+                        #print("case 2")
                         
                         #3 endpoints match
                         if len(set([in_1,out_1,in_2]))==1:
@@ -829,7 +829,7 @@ class Colored_punctured_surface:
                     #incoming and outgoing arrows have 1 distinct endpoint
                     
                     elif len(set([in_1,in_2,out_1,out_2]))==1:
-                        print("case 1")
+                        #print("case 1")
                         
                         local_intersection=0
                     
@@ -1182,7 +1182,7 @@ class Colored_bridge_trisection:
         
         for (key,value) in inclusion_maps_dict.items():
             lag_surface_module_basis=[]
-            for k in value.right_kernel().gens():
+            for k in value.kernel().gens():
                 lag_surface_module_basis.append(surface_quotient_map(surface_quotient_map.lift(k)))
                 
             lag=surface_free.span([list(lag_surface_module_basis[i]) for i in range(len(lag_surface_module_basis))],ZZ)
