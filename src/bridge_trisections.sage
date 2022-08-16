@@ -648,70 +648,7 @@ class Colored_punctured_surface:
         pi_1=self.pi_1_branched()
         return len(pi_1.abelian_invariants())/2
     
-    def cyclic_word_sheet_incoming_outgoing_list(self, cyclic_word):
-        #Subroutine for computing intersection numbers of curves
-        
-        #Given  a cyclic word in self.F which lifts to a cyclic word in the cover,
-        #return a list of basepoint indices (sheet indices) through which the word passes.
-        #For each sheet index k, also return a list of pairs (i,j) of integers in {0,...,2*rank(self.F)-1} 
-        #where the corresponding curve enters a 2-ball neighborhood U_k of p_k at position i and leaves at position j
-        #Positions labelled clockwise around the boundary of U_k
-        
-        sheet_inc_out_pairs_list=[[] for i in range(self.S.degree()+1)]
-        
-        starting_sheet=abs(cyclic_word.Tietze()[0])//rank(self.F)+1
-        starting_sign=sgn(cyclic_word.Tietze()[0])
-        prev_sub=abs(cyclic_word.Tietze()[len(cyclic_word.Tietze())-1]) % rank(self.F) -1
-        prev_sign=sgn(cyclic_word.Tietze()[len(cyclic_word.Tietze())-1])
-        if starting_sign==+1:
-            next_sheet=self.representation(self.F([abs(cyclic_word.Tietze()[len(cyclic_word.Tietze())-1]) % rank(self.F) ]))(abs(cyclic_word.Tietze()[len(cyclic_word.Tietze())-1])//rank(self.F)+1)
-        elif starting_sign==-1:
-            next_sheet=abs(cyclic_word.Tietze()[len(cyclic_word.Tietze())-1])//rank(self.F)+1
-                           
-                           
-        
-        for i in range(len(cyclic_word.Tietze())):
-            index=cyclic_word.Tietze()[i]
-            
-            
-            sub=abs(index) % rank(self.F) -1
-            sup=abs(index)//rank(self.F)+1 
-            sign=sgn(index)
-            
-            if sign==+1:
-                sheet=sup
-            elif sign==-1:
-                sheet=self.representation(self.F([sub+1]))(sup)
-            #if sup!=next_sheet:
-            #    raise Exception("not a lift of a cyclic word")
-            
-            if sign==+1:
-                outgoing=2*sub+1
-            elif sign==-1:
-                outgoing=2*sub
-            if prev_sign==+1:
-                incoming=2*prev_sub
-            elif prev_sign==-1:
-                incoming=2*prev_sub+1
-                           
-            if i != len(cyclic_word.Tietze())-1:
-                if sign==+1:
-                    next_sheet=self.representation(self.F([sub+1]))(sup)
-                if sign==-1:
-                    next_sheet=sup
-            #elif i==len(cyclic_word.Tietze()):#if next sheet!= starting sheet
-            #    if sign==+1:
-            #        if self.representation(self.F([sub+1]))(sup)!=starting_sheet: 
-             #           raise Exception("not a lift of a cyclic word")
-             #   elif sign==-1:
-             #       if sup!=starting_sheet:
-             #           raise Exception("not a lift of a cyclic word")
-            prev_sub=sub 
-            prev_sign=sign
-            sheet_inc_out_pairs_list[sheet].append([incoming,outgoing])
-            
-        
-        return sheet_inc_out_pairs_list
+    
     
     def in_cyclic_order(self,cyclic_list):
         
@@ -738,7 +675,53 @@ class Colored_punctured_surface:
         return true
                 
             
+    def cyclic_word_sheet_incoming_outgoing_list(self, cyclic_word):
+        #Subroutine for computing intersection numbers of curves
         
+        #Given  a cyclic word in self.F which lifts to a cyclic word in the cover,
+        #return a list of basepoint indices (sheet indices) through which the word passes.
+        #For each sheet index k, also return a list of pairs (i,j) of integers in {0,...,2*rank(self.F)-1} 
+        #where the corresponding curve enters a 2-ball neighborhood U_k of p_k at position i and leaves at position j
+        #Positions labelled clockwise around the boundary of U_k    
+        sheet_inc_out_list=[[] for i in range(self.S.degree())]
+        
+        
+        
+        for i in range(len(cyclic_word.Tietze())):
+            index=cyclic_word.Tietze()[i]          
+            sub=(abs(index)-1) % rank(self.F) 
+            sup=(abs(index)-1)//rank(self.F)+1 
+            sign=sgn(index)
+              
+            print(sub,sup,sign)
+            if i==0:
+                prev_index=cyclic_word.Tietze()[len(cyclic_word.Tietze())-1] 
+            elif i!=0:
+                prev_index=cyclic_word.Tietze()[i-1] 
+            prev_sub=(abs(prev_index)-1) % rank(self.F) 
+            prev_sup=(abs(prev_index)-1)//rank(self.F)+1 
+            prev_sign=sgn(prev_index)           
+                       
+            if sign==1:
+                sheet=sup
+                outgoing=2*sub+1
+            elif sign==-1:
+                sheet=self.representation(self.F([sub+1]))(sup)
+                outgoing=2*sub
+            if prev_sign==1:
+                incoming=2*prev_sub
+            elif prev_sign==-1:
+                incoming=2*prev_sub+1
+            
+            sheet_inc_out_list[sheet-1].append([sheet, incoming,outgoing])
+                       
+        return sheet_inc_out_list
+                       
+            
+                       
+            
+                       
+                       
     
     def intersection_number(self,word_1,word_2):
         #compute the algebraic intersection number of two cyclic words in the branched cover,
@@ -749,8 +732,8 @@ class Colored_punctured_surface:
         intersection_number=0
         
         for sheet in range(1,self.S.degree()+1):
-            for (in_1,out_1) in sheet_inc_out_1[sheet]:
-                for (in_2,out_2) in sheet_inc_out_2[sheet]:
+            for (s,in_1,out_1) in sheet_inc_out_1[sheet-1]:
+                for (s, in_2,out_2) in sheet_inc_out_2[sheet-1]:
                     
                     #incoming and outgoing arrows have 4 distinct endpoints
                     
@@ -852,6 +835,20 @@ class Colored_punctured_surface:
                     
                     intersection_number+=local_intersection
         return intersection_number
+    
+    def intersection_matrix(self):
+        #returns matrix of algebraic intersection numbers of generators of self.coverF after application of claw homomorphism
+        
+        claw_hom=self.claw_collapse_hom()
+        dim = rank(self.coverF)
+        
+        M=Matrix(dim)
+        
+        for i in range(dim):
+            for j in range(dim):
+                M[i,j]=self.intersection_number(claw_hom.image(self.pi_1_unbranched().gens()[i]),claw_hom.image(self.pi_1_unbranched().gens()[j]))
+        
+        return M
                         
                     
                 
