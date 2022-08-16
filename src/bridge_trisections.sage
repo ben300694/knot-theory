@@ -677,16 +677,14 @@ class Colored_punctured_surface:
             sub=abs(index) % rank(self.F) -1
             sup=abs(index)//rank(self.F)+1 
             sign=sgn(index)
-            print(index)
-            print(sub,"sub")
-            print(sup,"sup")
+            
             if sign==+1:
                 sheet=sup
             elif sign==-1:
                 sheet=self.representation(self.F([sub+1]))(sup)
             #if sup!=next_sheet:
             #    raise Exception("not a lift of a cyclic word")
-            print("sheet",sheet)
+            
             if sign==+1:
                 outgoing=2*sub+1
             elif sign==-1:
@@ -714,6 +712,151 @@ class Colored_punctured_surface:
             
         
         return sheet_inc_out_pairs_list
+    
+    def in_cyclic_order(self,cyclic_list):
+        
+        min_reached=false
+        for i in range(len(cyclic_list)):
+            if i != len(cyclic_list)-1:
+            
+                if cyclic_list[i] > cyclic_list[i+1]:
+                    if min_reached==true:
+                        return false
+                    elif min_reached==false:
+                        min_reached=true
+                elif cyclic_list[i] == cyclic_list[i+1]:
+                    return false
+            elif i == len(cyclic_list)-1:
+                if cyclic_list[i]> cyclic_list[0]:
+                    if min_reached==true:
+                        return false
+                    elif min_reached==false:
+                        min_reached=true
+                elif cyclic_list[i] == cyclic_list[0]:
+                    return false
+                
+        return true
+                
+            
+        
+    
+    def intersection_number(self,word_1,word_2):
+        #compute the algebraic intersection number of two cyclic words in the branched cover,
+        #which are lifts of cyclic words on the surface
+        
+        sheet_inc_out_1=self.cyclic_word_sheet_incoming_outgoing_list(word_1)
+        sheet_inc_out_2=self.cyclic_word_sheet_incoming_outgoing_list(word_2)
+        intersection_number=0
+        
+        for sheet in range(1,self.S.degree()+1):
+            for (in_1,out_1) in sheet_inc_out_1[sheet]:
+                for (in_2,out_2) in sheet_inc_out_2[sheet]:
+                    
+                    #incoming and outgoing arrows have 4 distinct endpoints
+                    
+                    if len(set([in_1,in_2,out_1,out_2]))==4:
+                        print("case 4")
+                        if self.in_cyclic_order([in_1,out_2,out_1,in_2])==true:
+                            local_intersection=1
+                        elif self.in_cyclic_order([in_2,out_1,out_2,in_1])==true:
+                            local_intersection=-1
+                        elif self.in_cyclic_order([in_1,out_1,out_2,in_2])==true:
+                            local_intersection=0
+                        elif self.in_cyclic_order([in_1,out_1,in_2,out_2])==true:
+                            local_intersection=0
+                        elif self.in_cyclic_order([out_1,in_1,out_2,in_2])==true:
+                            local_intersection=0
+                        elif self.in_cyclic_order([out_1,in_1,in_2,out_2])==true:
+                            local_intersection=0
+                            
+                        else:
+                            raise Exception("linking case not accounted for; 4 endpoints")
+                    
+                    #incoming and outgoing arrows have 3 distinct endpoints
+                    
+                    elif len(set([in_1,in_2,out_1,out_2]))==3:
+                        print("case 3")
+                        
+                        if out_1==out_2:
+                            if self.in_cyclic_order([in_2,in_1,out_1])==true:
+                                local_intersection=1
+                            elif self.in_cyclic_order([in_1,in_2,out_1])==true:
+                                local_intersection=0
+                            else:
+                                raise Exception("linking case not accounted for; 3 endpoints")
+                        elif in_1==in_2:
+                            if self.in_cyclic_order([in_2,out_2,out_1])==true:
+                                local_intersection=0
+                            elif self.in_cyclic_order([in_2,out_1,out_2])==true:
+                                local_intersection=-1
+                            else:
+                                raise Exception("linking case not accounted for; 3 endpoints")
+                        elif in_1==out_2:
+                            if self.in_cyclic_order([in_1,in_2,out_1])==true:
+                                local_intersection=0
+                            elif self.in_cyclic_order([in_1,out_1,in_2])==true:
+                                local_intersection=1
+                            else:
+                                raise Exception("linking case not accounted for; 3 endpoints")
+                        elif out_1==in_2:
+                            if self.in_cyclic_order([out_1,out_2,in_1])==true:
+                                local_intersection=-1
+                            elif self.in_cyclic_order([out_1,in_1,out_2])==true:
+                                local_intersection=0
+                            else:
+                                raise Exception("linking case not accounted for; 3 endpoints")
+                        elif in_1==out_1:
+                            local_intersection=0
+                        elif in_2==out_2:
+                            local_intersection=0
+                        else:
+                            raise Exception("linking case not accounted for; 3 endpoints")
+                        
+                            
+                                
+                    #incoming and outgoing arrows have 2 distinct endpoints
+                    
+                    elif len(set([in_1,in_2,out_1,out_2]))==2:
+                        print("case 2")
+                        
+                        #3 endpoints match
+                        if len(set([in_1,out_1,in_2]))==1:
+                            local_intersection=-1
+                        elif len(set([in_1,out_1,out_2]))==1:
+                            local_intersection=1
+                        elif len(set([in_2,out_2,in_1]))==1:
+                            local_intersection=0
+                        elif len(set([in_2,out_2,out_1]))==1:
+                            local_intersection=0
+                            
+                        #2 endpoints match
+                        elif in_1==out_1 and in_2==out_2:
+                            local_intersection=0
+                        elif in_1==in_2 and out_1==out_2:
+                            local_intersection=0
+                        elif in_1==out_2 and out_1==in_2:
+                            local_intersection=0
+                        
+                        else:
+                            raise Exception("linking case not accounted for; 2 endpoints")
+                        
+                        
+                            
+                            
+                    #incoming and outgoing arrows have 1 distinct endpoint
+                    
+                    elif len(set([in_1,in_2,out_1,out_2]))==1:
+                        print("case 1")
+                        
+                        local_intersection=0
+                    
+                    intersection_number+=local_intersection
+        return intersection_number
+                        
+                    
+                
+        
+        
     
     
 class Colored_trivial_tangle:
