@@ -357,6 +357,8 @@ def double_6_1_images_of_generators(p):
     [a,b]=BS12_to_Sp(p)
     g_1=a^-1*b
     g_2=b
+    #g_1=b^-1*a
+    #g_2=b^-1
 
     double_6_1_images_of_generators = [g_1,g_1^-1]+4*[g_2,g_2^-1]
     return double_6_1_images_of_generators
@@ -368,6 +370,8 @@ def double_6_1_colored_tangles(p):
     [a,b]=BS12_to_Sp(p)
     g_1=a^-1*b
     g_2=b
+    #g_1=b^-1*a
+    #g_2=b^-1
 
     double_6_1_images_of_generators = [g_1,g_1^-1]+4*[g_2,g_2^-1]
     
@@ -384,6 +388,8 @@ def double_6_1_colored_surface(p):
     [a,b]=BS12_to_Sp(p)
     g_1=a^-1*b
     g_2=b
+    #g_1=b^-1*a
+    #g_2=b^-1
 
     double_6_1_images_of_generators = [g_1,g_1^-1]+4*[g_2,g_2^-1]
     return Colored_punctured_surface(stevedore_F,stevedore_S, double_6_1_images_of_generators)
@@ -425,7 +431,8 @@ class Colored_punctured_surface:
         self.representation = self.F.hom([self.S(g) for g in images_of_generators])
         self.coverF=FreeGroup(rank(self.F)*self.S.degree())
         # punctured surface relation
-        self.relation=self.F([-i for i in range(1,rank(self.F)+1)])
+        #self.relation=self.F([-i for i in range(1,rank(self.F)+1)])
+        self.relation=self.F([i for i in range(1,rank(self.F)+1)]) #this is consistent with above bridge trisections class
         
     def __repr__(self) -> str:
         return str(self.__dict__)
@@ -704,14 +711,18 @@ class Colored_punctured_surface:
                        
             if sign==1:
                 sheet=sup
-                outgoing=2*sub+1
+                #outgoing=2*sub+1
+                outgoing=2*sub
             elif sign==-1:
                 sheet=self.representation(self.F([sub+1]))(sup)
-                outgoing=2*sub
+                #outgoing=2*sub
+                outgoing=2*sub+1
             if prev_sign==1:
-                incoming=2*prev_sub
-            elif prev_sign==-1:
+                #incoming=2*prev_sub
                 incoming=2*prev_sub+1
+            elif prev_sign==-1:
+                #incoming=2*prev_sub+1
+                incoming=2*prev_sub
             
             sheet_inc_out_list[sheet-1].append([sheet, incoming,outgoing])
                        
@@ -880,6 +891,12 @@ class Colored_trivial_tangle:
 
     def __repr__(self) -> str:
         return str(self.__dict__)
+    
+    def is_representation(self):
+        for reln in self.relations_source:
+            if self.representation(reln)!=self.S.identity():
+                return false
+        return true
 
     def lift_of_single_relation_sub_sup_exp(self, relation, starting_sheet):
         """
