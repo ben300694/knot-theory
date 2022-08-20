@@ -1346,14 +1346,31 @@ class Colored_bridge_trisection:
         #Compute intersection form
         claw_hom=self.surface.claw_collapse_hom()
         I=matrix(len(H_2_upstairs_gens))
+        M=self.surface.intersection_matrix()
         for x in range(len(x_prime_list)):
             for y in range(len(y_list)):
-                #I[x,y]=vector(x_prime_list[x])*M*vector(y_list[y])
-                for i in range(len(x_prime_list[x])):
-                    for j in range(len(y_list[y])):
-                        I[x,y]+=x_prime_list[x][i]*y_list[y][j]*self.surface.intersection_number(claw_hom.image(self.surface.pi_1_unbranched().gens()[i]),claw_hom.image(self.surface.pi_1_unbranched().gens()[j]))
+                I[x,y]=vector(x_prime_list[x])*M*vector(y_list[y])
+               # for i in range(len(x_prime_list[x])):
+                #    for j in range(len(y_list[y])):
+                 #       I[x,y]+=x_prime_list[x][i]*y_list[y][j]*self.surface.intersection_number(claw_hom.image(self.surface.pi_1_unbranched().gens()[i]),claw_hom.image(self.surface.pi_1_unbranched().gens()[j]))
+                    
+        if abs(I.determinant())!=1:
+            raise Exception('Not unimodular')
+        
+        eigenvals=I.eigenvalues()
+        signature=0
+        for v in eigenvals:
+            if v>0:
+                signature+=1
+            if v<0:
+                signature+=-1
+        
+        parity="even"
+        for i in range(len(H_2_upstairs_gens)):
+            if I[i,i]%2!=0:
+                parity="odd"
                                                                                          
-        return I
+        return I,signature,parity
             
     def lift_surface_free_to_free_group(self,surface_elt):
         
