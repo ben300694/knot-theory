@@ -1259,9 +1259,115 @@ class Colored_bridge_trisection:
                     
         
         return ec_tri_param
+    
+    def intersection_form(self):
+        inclusion_maps_dict=self.inclusion_maps_tripod()
         
+        #Cannot compute intersection of submodules of finitely generated modules
+        #To intersect the Lagrangians, re-build each as a submodule of a free module
+        
+        
+        free_module=self.H_1_handlebodies()[0]
+        surface_relation_submodule=span(presentation_matrix(self.coverF,self.surface.pi_1_branched().relations()).columns())
+        
+        surface_module=free_module/surface_relation_submodule
+        surface_free=ZZ^len(surface_module.gens())
+        
+        #in order to construct morphisms from central surface to each handlebody, 
+        #need the free module presented as a trivial quotient of itself
+
+        zero_vector=[0 for i in range(rank(self.coverF))]
+        trivial_module=free_module.span([zero_vector])
+        free_module_quotient_form=free_module/trivial_module
+        surface_quotient_map=free_module_quotient_form.hom([surface_module(free_module_quotient_form.gen(i))for i in range(rank(self.coverF))])
+        
+        
+        #Express basis for each Lagriangian (kernel of inclusion map into handlebody) in terms of surface module basis
+        
+        lag_surface_basis_dict={}
+        
+        for (key,value) in inclusion_maps_dict.items():
+            lag_surface_module_basis=[]
+            for k in value.kernel().gens():
+                lag_surface_module_basis.append(surface_quotient_map(surface_quotient_map.lift(k)))
+                
+            lag=surface_free.span([list(lag_surface_module_basis[i]) for i in range(len(lag_surface_module_basis))],ZZ)
+            lag_surface_basis_dict.update({key:lag})
+        
+        
+        H_2=self.homology_branched_cover()[1]
+        L_red=lag_surface_basis_dict['red']
+        L_blu=lag_surface_basis_dict['blu']
+        
+        H_2_upstairs_gens=[]
+        for x in H_2.gens():
+    
+            X=surface_module.zero()
+            for i in range(len(x.lift())):
+                X+=x.lift()[i]*surface_module.gen(i)
+   
+            H_2_upstairs_gens.append(X.lift())
+        
+        #matrix with columns 1-3 generators of L_red and 4-6 generators of L_blu
+        
+        L_red_blu_matrix_tr=matrix(ZZ,[L_red.gen(i) for i in range(len(L_red.gens()))]+[L_blu.gen(i) for i in range(len(L_blu.gens()))])
+        L_red_blu_matrix=L_red_blu_matrix_tr.transpose()
+        
+        L_red_blu_combo=[]
+        #Express generators of H_2 as linear combination of L_red and L_blu generators
+        #Mx=v where v in H_2 and M= L_red_blu_matrix
+        for H_2_gen in H_2.gens():
+    
+            L_red_blu_combo.append(L_red_blu_matrix.solve_right(matrix(ZZ,list(H_2_gen.lift())).transpose()))
+        
+        H_2_L_red_gens_coefficients=[]
+        
+        for i in range(len(L_red_blu_combo)):
+            gen=[]
+            for j in range(len(L_red.gens())):
+                gen.append(L_red_blu_combo[i][j][0])
+            H_2_L_red_gens_coefficients.append(gen)
+       
+
+        H_2_L_red_projections=[]
+        for coef_list in H_2_L_red_gens_coefficients:
+            gen=L_red.zero()
+            for i in range(len(coef_list)):
+                gen+=coef_list[i]*L_red.gen(i)
+            H_2_L_red_projections.append(gen)
             
+        x_prime_list=[]
+
+        for x in H_2_L_red_projections:
+            x_prime_list.append(self.lift_surface_free_to_free_group(surface_free(x)))
+
+        y_list=H_2_upstairs_gens
         
+        #Compute intersection form
+        claw_hom=self.surface.claw_collapse_hom()
+        I=matrix(len(H_2_upstairs_gens))
+        for x in range(len(x_prime_list)):
+            for y in range(len(y_list)):
+                #I[x,y]=vector(x_prime_list[x])*M*vector(y_list[y])
+                for i in range(len(x_prime_list[x])):
+                    for j in range(len(y_list[y])):
+                        I[x,y]+=x_prime_list[x][i]*y_list[y][j]*self.surface.intersection_number(claw_hom.image(self.surface.pi_1_unbranched().gens()[i]),claw_hom.image(self.surface.pi_1_unbranched().gens()[j]))
+                                                                                         
+        return I
+            
+    def lift_surface_free_to_free_group(self,surface_elt):
+        
+        free_module=self.H_1_handlebodies()[0]
+        surface_relation_submodule=span(presentation_matrix(self.coverF,self.surface.pi_1_branched().relations()).columns())
+        
+        surface_module=free_module/surface_relation_submodule
+        surface_free=ZZ^len(surface_module.gens())
+        
+        X=surface_module.zero()
+        for i in range(len(surface_elt)):
+            X+=surface_elt[i]*surface_module.gen(i)
+        return(X.lift())
+
 #Determine the presentation matrix corresponding to the abelianization of a finitely presented group
 def presentation_matrix(F,relations):
     num_gens=rank(F)
