@@ -1171,7 +1171,7 @@ class Colored_bridge_trisection:
         return lag_dict
             
     
-    def H_2_branched_cover(self):
+    def homology_branched_cover(self):
         inclusion_maps_dict=self.inclusion_maps_tripod()
         
         #Cannot compute intersection of submodules of finitely generated modules
@@ -1210,14 +1210,55 @@ class Colored_bridge_trisection:
         intersection_blu_gre=lag_surface_basis_dict['blu'].intersection(lag_surface_basis_dict['gre'])
         intersection_gre_red=lag_surface_basis_dict['gre'].intersection(lag_surface_basis_dict['red'])
         
+        intersection_red_blu_gre=lag_surface_basis_dict['red'].intersection(intersection_blu_gre)
+        
         
         #https://arxiv.org/pdf/1711.04762.pdf Thm 3.6 p.9
+        #https://arxiv.org/pdf/1901.04734.pdf Thm 2.1 p.3
+        
+        H_1=surface_free/(lag_surface_basis_dict['red']+lag_surface_basis_dict['blu']+lag_surface_basis_dict['gre'])
         
         H_2_numerator=lag_surface_basis_dict['gre'].intersection(sum_red_blu)
         
         H_2_denominator=intersection_blu_gre+intersection_gre_red
         
-        return H_2_numerator/H_2_denominator
+        
+        H_2=H_2_numerator/H_2_denominator
+        
+        H_3=intersection_red_blu_gre/trivial_module
+        
+        
+        
+        
+        
+        return H_1, H_2, H_3
+    
+    def euler_characteristic(self):
+        
+        #from trisection parameters:
+        tri_param=self.trisection_parameters_branched_cover()
+        ec_tri_param=2+tri_param[0]-(tri_param[1][0]+tri_param[1][1]+tri_param[1][2])
+        
+        #from homology
+        homology_gps=self.homology_branched_cover()
+        
+        rank_list=[]
+        
+        for i in range(3):
+            rank=0
+            abel_inv=homology_gps[i].invariants()
+            for j in abel_inv:
+                if j==0:
+                    rank+=1
+            rank_list.append(rank)
+       
+        ec_homology=2-rank_list[0]+rank_list[1]-rank_list[2]
+        
+        if ec_homology!=ec_tri_param:
+            raise Exception('Euler characteristic mismatch')
+                    
+        
+        return ec_tri_param
         
             
         
