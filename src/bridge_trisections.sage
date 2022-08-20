@@ -1296,11 +1296,15 @@ class Colored_bridge_trisection:
         
         
         H_2=self.homology_branched_cover()[1]
+        H_2_free_part_gens=[]
+        for gen in H_2.gens():
+            if gen.additive_order()==+Infinity:
+                H_2_free_part_gens.append(gen)
         L_red=lag_surface_basis_dict['red']
         L_blu=lag_surface_basis_dict['blu']
         
         H_2_upstairs_gens=[]
-        for x in H_2.gens():
+        for x in H_2_free_part_gens:
     
             X=surface_module.zero()
             for i in range(len(x.lift())):
@@ -1316,7 +1320,7 @@ class Colored_bridge_trisection:
         L_red_blu_combo=[]
         #Express generators of H_2 as linear combination of L_red and L_blu generators
         #Mx=v where v in H_2 and M= L_red_blu_matrix
-        for H_2_gen in H_2.gens():
+        for H_2_gen in H_2_free_part_gens:
     
             L_red_blu_combo.append(L_red_blu_matrix.solve_right(matrix(ZZ,list(H_2_gen.lift())).transpose()))
         
