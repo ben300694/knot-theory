@@ -1322,8 +1322,11 @@ class Colored_bridge_trisection:
         #Mx=v where v in H_2 and M= L_red_blu_matrix
         for H_2_gen in H_2_free_part_gens:
     
-            L_red_blu_combo.append(L_red_blu_matrix.solve_right(matrix(ZZ,list(H_2_gen.lift())).transpose()))
-        
+            #L_red_blu_combo.append(L_red_blu_matrix.solve_right(matrix(ZZ,list(H_2_gen.lift())).transpose()))
+            H_2_gen_lift=vector(H_2_gen.lift())
+            soln=solve_Ax_eq_b_int(L_red_blu_matrix,H_2_gen_lift)
+            L_red_blu_combo.append(soln)
+            
         H_2_L_red_gens_coefficients=[]
         
         for i in range(len(L_red_blu_combo)):
@@ -1406,7 +1409,11 @@ def presentation_matrix(F,relations):
                  
         
         
-        
+def solve_Ax_eq_b_int(A,b):
+    B,U,V=A.smith_form()
+    y=B.solve_right(U*b)
+    x=V*y
+    return x
         
             
 
