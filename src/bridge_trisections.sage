@@ -1312,7 +1312,7 @@ class Colored_bridge_trisection:
    
             H_2_upstairs_gens.append(X.lift())
         
-        #matrix with columns 1-3 generators of L_red and 4-6 generators of L_blu
+        #matrix with first columns generators of L_red and final columns generators of L_blu
         
         L_red_blu_matrix_tr=matrix(ZZ,[L_red.gen(i) for i in range(len(L_red.gens()))]+[L_blu.gen(i) for i in range(len(L_blu.gens()))])
         L_red_blu_matrix=L_red_blu_matrix_tr.transpose()
