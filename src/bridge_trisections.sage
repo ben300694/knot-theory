@@ -1377,7 +1377,7 @@ class Colored_bridge_trisection:
             if I[i,i]%2!=0:
                 parity="odd"
                                                                                          
-        return I,signature,parity
+        return H_2_upstairs_gens, I,signature,parity
             
     def lift_surface_free_to_free_group(self,surface_elt):
         
