@@ -9,10 +9,11 @@
 # finitely presented groups functionality
 # https://doc.sagemath.org/html/en/reference/groups/sage/groups/finitely_presented.html
 
-from sage.interfaces.gap import get_gap_memory_pool_size, set_gap_memory_pool_size
-set_gap_memory_pool_size(50000000000)
+#from sage.interfaces.gap import get_gap_memory_pool_size, set_gap_memory_pool_size
+#set_gap_memory_pool_size(50000000000)
 
 import copy
+
 
 def commutator(a, b):
     return a*b*a^(-1)*b^(-1)
@@ -217,7 +218,7 @@ class Bridge_Trisection:
 # R_k in Suciu's family
 # # # # # # # # # # # # #
 
-attach('data/suciu_R_k_bridge_trisection.sage')
+load('data/suciu_R_k_bridge_trisection.sage')
 
 # k in NN is the parameter for Suciu's family R_k
 def R_k(k : int):
@@ -245,7 +246,7 @@ R_4 = R_k(4)
 # l-twist spin of the (2, b) torus knot
 # # # # # # # # # # # # # # # # # # # # # #
 
-attach('data/l_twist_spin_T_2_b_bridge_trisection.sage')
+load('data/l_twist_spin_T_2_b_bridge_trisection.sage')
 
 def tau_l_T_2_b(l : int, b : int):
     tau_l_T_2_b = Bridge_Trisection(4)
@@ -267,7 +268,7 @@ def tau_l_T_2_b(l : int, b : int):
 # l-twist spin of the (3, b) torus knot
 # # # # # # # # # # # # # # # # # # # # # #
 
-attach('data/l_twist_spin_T_3_b_bridge_trisection.sage')
+load('data/l_twist_spin_T_3_b_bridge_trisection.sage')
 
 def tau_l_T_3_b(l : int, b : int):
     tau_l_T_3_b = Bridge_Trisection(7)
@@ -311,7 +312,7 @@ tau_2_T_3_5 = tau_l_T_3_b(2, 5)
 # of the Stevedore knot 6_1
 # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-attach('data/stevedore_disk_double.sage')
+load('data/stevedore_disk_double.sage')
 
 double_6_1 = Bridge_Trisection(5)
 
@@ -331,6 +332,71 @@ double_6_1.gre_tangle = Trivial_tangle(bridge_number=5,
                                                   braid_word=double_6_1_gre_tangle_braid_crossings_list,
                                                   strand_matching=double_6_1_gre_tangle_matching_list)
 
+#Representations to S_p for p odd
+
+#BS(1,2)=<A,B|BAB^-1=A^2>
+#homomorphism sending A-->a, B-->b, a, b in S_p where
+#a=(1,...,p) p odd
+#G=image subgroup
+
+
+def BS12_to_Sp(p):
+    S_p=SymmetricGroup(p)
+
+    a_list_br=[(i+1)%p+1 for i in range(p)] #p-cycle in bottom row notation
+    a_list_cycle=[(i+1) for i in range(p)]
+    a_dict={i+1:i+1 for i in range(p)}
+    a_sq_list=[(2*i)%p +1 for i in range(p)]
+    a_sq_inverse_dict={(2*i)%p +1:i+1 for i in range(p)} #inverse dictionary representing a^2 in cycle notation
+
+    b_list_br=[a_dict[a_sq_inverse_dict[i+1]] for i in range(p)] #b in bottom row notation
+
+    #convert lists to bottom-row notation and then symmetric group elements in cycle notation
+    a=S_p(Permutation(a_list_br)) 
+    b=S_p(Permutation(b_list_br))
+    
+    return [a,b]
+
+def double_6_1_images_of_generators(p):
+    [a,b]=BS12_to_Sp(p)
+    g_1=a^-1*b
+    g_2=b
+    #g_1=b^-1*a
+    #g_2=b^-1
+
+    double_6_1_images_of_generators = [g_1,g_1^-1]+4*[g_2,g_2^-1]
+    return double_6_1_images_of_generators
+
+def double_6_1_colored_tangles(p):
+    stevedore_F = FreeGroup(10)
+    stevedore_S = SymmetricGroup(p)
+    
+    [a,b]=BS12_to_Sp(p)
+    g_1=a^-1*b
+    g_2=b
+    #g_1=b^-1*a
+    #g_2=b^-1
+
+    double_6_1_images_of_generators = [g_1,g_1^-1]+4*[g_2,g_2^-1]
+    
+    double_6_1_coloring_red = Colored_trivial_tangle(stevedore_F, stevedore_S, double_6_1.red_tangle.relations(), double_6_1_images_of_generators)
+    double_6_1_coloring_blu = Colored_trivial_tangle(stevedore_F, stevedore_S, double_6_1.blu_tangle.relations(), double_6_1_images_of_generators)
+    double_6_1_coloring_gre = Colored_trivial_tangle(stevedore_F, stevedore_S, double_6_1.gre_tangle.relations(), double_6_1_images_of_generators)
+    
+    return double_6_1_coloring_red, double_6_1_coloring_blu, double_6_1_coloring_gre
+
+def double_6_1_colored_surface(p):
+    stevedore_F = FreeGroup(10)
+    stevedore_S = SymmetricGroup(p)
+    
+    [a,b]=BS12_to_Sp(p)
+    g_1=a^-1*b
+    g_2=b
+    #g_1=b^-1*a
+    #g_2=b^-1
+
+    double_6_1_images_of_generators = [g_1,g_1^-1]+4*[g_2,g_2^-1]
+    return Colored_punctured_surface(stevedore_F,stevedore_S, double_6_1_images_of_generators)
 
 # # # # # # # # # # # # # # # # # # # # # #
 # 0-twist spin of the (2, 3) torus knot
@@ -349,7 +415,463 @@ spun_trefoil = tau_l_T_2_b(0, 3)
 # incorporate them in the classes above later
 # # # # # # # # # # # # # # # # # # # # # #
 
-class Coloring:
+class Colored_punctured_surface:
+    """
+    Attributes
+    ----------
+    F: Free group containing the generators (in our case x_0, ... x_{2b-1})
+    S: Symmetric group used as the codomain for the coloring
+    
+    images_of_generators:
+        list of elements of the symmetric group S specifying the images of the generators of F
+        We are always assuming that the representation is transitive,
+        so that we obtain a connected cover.
+    """
+    
+    def __init__(self, F: FreeGroup, S: SymmetricGroup, images_of_generators=[]):
+        self.F=F
+        self.S=S
+        # construct homomorphism F --> S from the list images_of_generators
+        self.representation = self.F.hom([self.S(g) for g in images_of_generators])
+        self.coverF=FreeGroup(rank(self.F)*self.S.degree())
+        # punctured surface relation
+        #self.relation=self.F([-i for i in range(1,rank(self.F)+1)])
+        self.relation=self.F([i for i in range(1,rank(self.F)+1)]) #this is consistent with above bridge trisections class
+        
+    def __repr__(self) -> str:
+        return str(self.__dict__)
+    
+    def is_representation(self):
+        #Check that surface relation is satisfied
+        return self.representation.image(self.relation)==self.S.identity()
+    
+    def claw_relations_endpt_sub_sup_exp_dict(self):
+        
+        #Returns a dictionary.  Each entry is of the form {endpoint,relation}.  When relation is lifted beginning at vertex 1, it ends at endpoint.  Relation is expressed as a list of triples [sub,sup,exp], corresponding to the generator (x_sub^sup)^exp, where exp=+/- 1
+
+        #F=FreeGroup(g)
+        #Free group with generators x0,x1,...,x(g-1)
+
+        n=self.S.degree()
+        g=self.F.rank()
+        
+        
+        #vertices p1,p2,p3,... note indexing starts at 1 to match symmetric group
+
+        
+        reachable=[1]
+        remaining=[i for i in range(2,n+1)] #vertices remaining to be visited
+        
+        claw_relations={1:[]}
+
+
+        while len(remaining)>0:
+
+            for current in reachable:
+                
+                reachable.remove(current)
+
+                for j in range(g): #j is the subscript of x_j.  
+
+                    #Determine which vertices you can reach from current from each of the generators x_0,...,x_g-1
+                   
+                    
+                    endpoint=self.representation(self.F([j+1]))(current)
+
+                    #check if the endpoint vertex has been visited.  If not (i.e., if in remaining)...
+                    if( endpoint in remaining):
+                        
+                        remaining.remove(endpoint) #don't visit this vertex again  
+                        reachable.append(endpoint)
+                        #next concatenate corresponding variable with current claw relation
+                        previous_subword=claw_relations[current].copy()                                    
+                        claw_relations.update({endpoint: previous_subword})
+                        claw_relations[endpoint].append([j,current,1])
+
+        return claw_relations
+    
+    def claw_relations_reindex(self):
+        relations_sub_sup_exp=list(self.claw_relations_endpt_sub_sup_exp_dict().values())
+        relations_list=[]
+        for relation_sub_sup_exp in relations_sub_sup_exp:
+            relation_reindexed=[]
+            for triple in relation_sub_sup_exp:
+                (sub, sup, exp) = triple
+                new_subscript= (( (sub + self.F.rank() * (sup - 1)))+1)*exp
+                relation_reindexed.append(new_subscript)
+            relations_list.append(relation_reindexed)
+        group_relations_list=[]
+        for reln in relations_list:
+            group_relations_list.append(self.coverF(reln))
+        return group_relations_list
+    
+    def unbranchedtobranched_relations_sub_sup_exp(self):
+        # Powers of meridians
+        
+        n=self.S.degree()
+        g=self.F.rank()
+        
+        relations=[]
+        for j in range(g): #go through all generators x_j
+            
+                
+            cycles=self.representation(self.F([j+1])).cycle_tuples(singletons=True)
+            
+            
+            for cycle in cycles:
+                
+                cycle_relation=[]
+                for i in range(len(cycle)):
+                    cycle_relation.append([j,cycle[i],1])
+                relations.append(cycle_relation)
+                
+                
+        return relations
+                
+    def unbranchedtobranched_relations_reindex(self):
+        relations_sub_sup_exp=self.unbranchedtobranched_relations_sub_sup_exp()
+        relations_list=[]
+        for relation_sub_sup_exp in relations_sub_sup_exp:
+            relation_reindexed=[]
+            for triple in relation_sub_sup_exp:
+                (sub, sup, exp) = triple
+                new_subscript= (( (sub + self.F.rank() * (sup - 1)))+1)*exp
+                relation_reindexed.append(new_subscript)
+            relations_list.append(relation_reindexed)
+        group_relations_list=[]
+        for reln in relations_list:
+            group_relations_list.append(self.coverF(reln))
+        return group_relations_list
+    
+    def claw_collapse_hom(self):
+        #returns the homomorphism from self.pi_1_unbranched() to itself determined by collapsing the claw
+         
+        images_list=[self.coverF([]) for i in range(rank(self.coverF))]
+        for sub in range(rank(self.F)):
+            for sup in range(1,self.S.degree()+1):
+        
+                
+                generator_reindex_subscript=( (sub + self.F.rank() * (sup - 1)))
+                endpoint=self.representation(self.F([sub+1]))(sup)
+                
+                claw_dict=self.claw_relations_endpt_sub_sup_exp_dict()
+                left_word_sub_sup_exp=claw_dict[sup]
+                
+                left_word=[]
+                for gen in left_word_sub_sup_exp:
+                    # for each generator in the word, find its reindexed subscript.
+                    # Add 1 because will use as index in free group.
+                    left_word.append((( (gen[0] + self.F.rank() * (gen[1] - 1))))*gen[2]+1)
+                    
+
+                right_word_sub_sup_exp=self.claw_relations_endpt_sub_sup_exp_dict()[endpoint]
+                right_word=[]
+                for gen in right_word_sub_sup_exp:              
+                    # for each generator in the word, find its reindexed subscript.
+                    # Add 1 because will use as index in free group.
+                    right_word.append((( (gen[0] + self.F.rank() * (gen[1] - 1))))*gen[2]+1) 
+                
+                                        
+                
+                    
+                #generator_image = self.coverF(left_word) * \
+                #                    self.coverF([generator_reindex_subscript+1]) * \
+                #                        self.coverF(right_word)^-1
+                generator_image = self.pi_1_unbranched()(left_word) * \
+                                    self.pi_1_unbranched()([generator_reindex_subscript+1]) * \
+                                        self.pi_1_unbranched()(right_word)^-1
+               
+                images_list[generator_reindex_subscript]=generator_image
+                                            
+        #hom=self.coverF.hom(images_list)
+        hom=self.pi_1_unbranched().hom(images_list)
+        
+        return hom
+    
+    def pi_1_punctured_sphere(self):
+        return self.F.quotient([self.relation])
+    
+    def covering_hom(self):
+        #returns the homomorphism from self.pi_1_unbranched() to self.pi_1_punctured_sphere() induced by covering map, after claw collapse
+        images_list=[]
+        collapse_hom=self.claw_collapse_hom()
+        for g in range(rank(self.coverF)):
+            upstairs=list(collapse_hom.image(self.pi_1_unbranched()([g+1])).Tietze())
+            
+            downstairs=[(((abs(x)-1) % rank(self.F))+1)*sign(x) for x in upstairs]
+            
+            images_list.append(self.pi_1_punctured_sphere()(downstairs))
+        hom=self.pi_1_unbranched().hom(images_list)
+        return hom
+    
+    
+    
+    def single_lift_relation_sub_sup_exp(self,starting_sheet):
+        current_sheet = starting_sheet
+        list_of_sheets = [starting_sheet]
+        for current_letter in self.relation.Tietze():
+            current_sheet = self.representation(self.F([current_letter]))(current_sheet)
+            list_of_sheets.append(current_sheet)
+        list_of_pairs = []        
+        for i, current_letter in enumerate(self.relation.Tietze()):
+            subscript = current_letter
+            if sign(current_letter) == +1:
+                superscript = list_of_sheets[i]
+            elif sign(current_letter) == -1:
+                superscript = list_of_sheets[i+1]
+            list_of_pairs.append((subscript, superscript))
+        list_of_triples=[]
+        for pair in list_of_pairs:
+            # fixes off by one error in subscript,
+            # moves sign of exponent to third entry
+            # each triple is (superscript,subscript,exponent (+/-1))
+            list_of_triples.append([abs(pair[0])-1,pair[1],sign(pair[0])]) 
+        return list_of_triples
+
+    def single_lift_relation_reindex(self, starting_sheet):
+        relationtriples=self.single_lift_relation_sub_sup_exp(starting_sheet)
+        rel=[]
+        for triple in relationtriples:
+            (sub, sup, exp) = triple
+            new_subscript= (( (sub + self.F.rank() * (sup - 1)))+1)*exp
+            
+            rel.append(new_subscript)
+        return self.coverF(rel)
+    
+    def lift_relation_reindex(self):
+        list_of_lifted_relations=[]
+        rel=self.relation
+        # self.S.degree() is the rank of the symmetric group = number of sheets
+        for i in range(0, self.S.degree()):
+            rel_lifted = self.single_lift_relation_reindex(i+1)
+            # i+1 because sheets are indexed starting from 1
+            list_of_lifted_relations.append(rel_lifted)
+        
+        return list_of_lifted_relations
+    
+    def pi_1_branched(self):
+        return self.coverF.quotient(self.unbranchedtobranched_relations_reindex()+self.claw_relations_reindex()+self.lift_relation_reindex())
+         
+    def pi_1_unbranched(self):
+        return self.coverF.quotient(self.claw_relations_reindex()+self.lift_relation_reindex())
+    
+    def genus_branched_cover(self):
+        pi_1=self.pi_1_branched()
+        return len(pi_1.abelian_invariants())/2
+    
+    
+    
+    def in_cyclic_order(self,cyclic_list):
+        
+        min_reached=false
+        for i in range(len(cyclic_list)):
+            if i != len(cyclic_list)-1:
+            
+                if cyclic_list[i] > cyclic_list[i+1]:
+                    if min_reached==true:
+                        return false
+                    elif min_reached==false:
+                        min_reached=true
+                elif cyclic_list[i] == cyclic_list[i+1]:
+                    return false
+            elif i == len(cyclic_list)-1:
+                if cyclic_list[i]> cyclic_list[0]:
+                    if min_reached==true:
+                        return false
+                    elif min_reached==false:
+                        min_reached=true
+                elif cyclic_list[i] == cyclic_list[0]:
+                    return false
+                
+        return true
+                
+            
+    def cyclic_word_sheet_incoming_outgoing_list(self, cyclic_word):
+        #Subroutine for computing intersection numbers of curves
+        
+        #Given  a cyclic word in self.F which lifts to a cyclic word in the cover,
+        #return a list of basepoint indices (sheet indices) through which the word passes.
+        #For each sheet index k, also return a list of pairs (i,j) of integers in {0,...,2*rank(self.F)-1} 
+        #where the corresponding curve enters a 2-ball neighborhood U_k of p_k at position i and leaves at position j
+        #Positions labelled clockwise around the boundary of U_k    
+        sheet_inc_out_list=[[] for i in range(self.S.degree())]
+        
+        
+        
+        for i in range(len(cyclic_word.Tietze())):
+            index=cyclic_word.Tietze()[i]          
+            sub=(abs(index)-1) % rank(self.F) 
+            sup=(abs(index)-1)//rank(self.F)+1 
+            sign=sgn(index)
+              
+            
+            if i==0:
+                prev_index=cyclic_word.Tietze()[len(cyclic_word.Tietze())-1] 
+            elif i!=0:
+                prev_index=cyclic_word.Tietze()[i-1] 
+            prev_sub=(abs(prev_index)-1) % rank(self.F) 
+            prev_sup=(abs(prev_index)-1)//rank(self.F)+1 
+            prev_sign=sgn(prev_index)           
+                       
+            if sign==1:
+                sheet=sup
+                #outgoing=2*sub+1
+                outgoing=2*sub
+            elif sign==-1:
+                sheet=self.representation(self.F([sub+1]))(sup)
+                #outgoing=2*sub
+                outgoing=2*sub+1
+            if prev_sign==1:
+                #incoming=2*prev_sub
+                incoming=2*prev_sub+1
+            elif prev_sign==-1:
+                #incoming=2*prev_sub+1
+                incoming=2*prev_sub
+            
+            sheet_inc_out_list[sheet-1].append([sheet, incoming,outgoing])
+                       
+        return sheet_inc_out_list
+                       
+            
+                       
+            
+                       
+                       
+    
+    def intersection_number(self,word_1,word_2):
+        #compute the algebraic intersection number of two cyclic words in the branched cover,
+        #which are lifts of cyclic words on the surface
+        
+        sheet_inc_out_1=self.cyclic_word_sheet_incoming_outgoing_list(word_1)
+        sheet_inc_out_2=self.cyclic_word_sheet_incoming_outgoing_list(word_2)
+        intersection_number=0
+        
+        for sheet in range(1,self.S.degree()+1):
+            for (s,in_1,out_1) in sheet_inc_out_1[sheet-1]:
+                for (s, in_2,out_2) in sheet_inc_out_2[sheet-1]:
+                    
+                    #incoming and outgoing arrows have 4 distinct endpoints
+                    
+                    if len(set([in_1,in_2,out_1,out_2]))==4:
+                        #print("case 4")
+                        if self.in_cyclic_order([in_1,out_2,out_1,in_2])==true:
+                            local_intersection=1
+                        elif self.in_cyclic_order([in_2,out_1,out_2,in_1])==true:
+                            local_intersection=-1
+                        elif self.in_cyclic_order([in_1,out_1,out_2,in_2])==true:
+                            local_intersection=0
+                        elif self.in_cyclic_order([in_1,out_1,in_2,out_2])==true:
+                            local_intersection=0
+                        elif self.in_cyclic_order([out_1,in_1,out_2,in_2])==true:
+                            local_intersection=0
+                        elif self.in_cyclic_order([out_1,in_1,in_2,out_2])==true:
+                            local_intersection=0
+                            
+                        else:
+                            raise Exception("linking case not accounted for; 4 endpoints")
+                    
+                    #incoming and outgoing arrows have 3 distinct endpoints
+                    
+                    elif len(set([in_1,in_2,out_1,out_2]))==3:
+                        #print("case 3")
+                        
+                        if out_1==out_2:
+                            if self.in_cyclic_order([in_2,in_1,out_1])==true:
+                                local_intersection=1
+                            elif self.in_cyclic_order([in_1,in_2,out_1])==true:
+                                local_intersection=0
+                            else:
+                                raise Exception("linking case not accounted for; 3 endpoints")
+                        elif in_1==in_2:
+                            if self.in_cyclic_order([in_2,out_2,out_1])==true:
+                                local_intersection=0
+                            elif self.in_cyclic_order([in_2,out_1,out_2])==true:
+                                local_intersection=-1
+                            else:
+                                raise Exception("linking case not accounted for; 3 endpoints")
+                        elif in_1==out_2:
+                            if self.in_cyclic_order([in_1,in_2,out_1])==true:
+                                local_intersection=0
+                            elif self.in_cyclic_order([in_1,out_1,in_2])==true:
+                                local_intersection=1
+                            else:
+                                raise Exception("linking case not accounted for; 3 endpoints")
+                        elif out_1==in_2:
+                            if self.in_cyclic_order([out_1,out_2,in_1])==true:
+                                local_intersection=-1
+                            elif self.in_cyclic_order([out_1,in_1,out_2])==true:
+                                local_intersection=0
+                            else:
+                                raise Exception("linking case not accounted for; 3 endpoints")
+                        elif in_1==out_1:
+                            local_intersection=0
+                        elif in_2==out_2:
+                            local_intersection=0
+                        else:
+                            raise Exception("linking case not accounted for; 3 endpoints")
+                        
+                            
+                                
+                    #incoming and outgoing arrows have 2 distinct endpoints
+                    
+                    elif len(set([in_1,in_2,out_1,out_2]))==2:
+                        #print("case 2")
+                        
+                        #3 endpoints match
+                        if len(set([in_1,out_1,in_2]))==1:
+                            local_intersection=-1
+                        elif len(set([in_1,out_1,out_2]))==1:
+                            local_intersection=1
+                        elif len(set([in_2,out_2,in_1]))==1:
+                            local_intersection=0
+                        elif len(set([in_2,out_2,out_1]))==1:
+                            local_intersection=0
+                            
+                        #2 endpoints match
+                        elif in_1==out_1 and in_2==out_2:
+                            local_intersection=0
+                        elif in_1==in_2 and out_1==out_2:
+                            local_intersection=0
+                        elif in_1==out_2 and out_1==in_2:
+                            local_intersection=0
+                        
+                        else:
+                            raise Exception("linking case not accounted for; 2 endpoints")
+                        
+                        
+                            
+                            
+                    #incoming and outgoing arrows have 1 distinct endpoint
+                    
+                    elif len(set([in_1,in_2,out_1,out_2]))==1:
+                        #print("case 1")
+                        
+                        local_intersection=0
+                    
+                    intersection_number+=local_intersection
+        return intersection_number
+    
+    def intersection_matrix(self):
+        #returns matrix of algebraic intersection numbers of generators of self.coverF after application of claw homomorphism
+        
+        claw_hom=self.claw_collapse_hom()
+        dim = rank(self.coverF)
+        
+        M=Matrix(dim)
+        
+        for i in range(dim):
+            for j in range(dim):
+                M[i,j]=self.intersection_number(claw_hom.image(self.pi_1_unbranched().gens()[i]),claw_hom.image(self.pi_1_unbranched().gens()[j]))
+        
+        return M
+                        
+                    
+                
+        
+        
+    
+    
+class Colored_trivial_tangle:
     """
     Attributes
     ----------
@@ -364,53 +886,538 @@ class Coloring:
     def __init__(self, F: FreeGroup, S: SymmetricGroup, relations_source = [], images_of_generators = []):
         self.F = F
         self.S = S
+        
         self.relations_source = relations_source
         # construct homomorphism F --> S from the list images_of_generators
         self.representation = self.F.hom([self.S(g) for g in images_of_generators])
+        self.coverF = FreeGroup(self.F.rank() * self.S.degree())
+        self.surface = Colored_punctured_surface(self.F,self.S,images_of_generators)
 
     def __repr__(self) -> str:
         return str(self.__dict__)
+    
+    def is_representation(self):
+        for reln in self.relations_source:
+            if self.representation(reln)!=self.S.identity():
+                return false
+        return true
 
-    def lift_of_single_relation(relation, starting_sheet):
+    def lift_of_single_relation_sub_sup_exp(self, relation, starting_sheet):
         """
         Computes the attaching circle for the lift of a 2-cell,
         with the basepoint in the starting_sheet
 
+        Returns a list of pairs, with each element giving (subscript, superscript)
+        in the lifted relation (following Fox' notation convention)
+
         relation: word in a FreeGroup
-        starting_sheet: 
+        starting_sheet: index of the lift of the basepoint where the lift of the curve is starting 
         """
+        # Test the function by calling
+        # test_coloring.lift_of_single_relation(test_relation, 1)
         current_sheet = starting_sheet
-        # TODO: Continue implementing this function
-        # We can integrate it into the python classes later
+        list_of_sheets = [starting_sheet]
+        for current_letter in relation.Tietze():
+            #print("current_letter =", current_letter)
+            #print("permutation of current letter =", self.representation(self.F([current_letter])))
+            current_sheet = self.representation(self.F([current_letter]))(current_sheet)
+            list_of_sheets.append(current_sheet)
+            #print("current list_of_sheets =", list_of_sheets)
+        # try to find subscripts and superscripts, save them as a list of pairs
+        list_of_pairs = []        
+        for i, current_letter in enumerate(relation.Tietze()):
+            subscript = current_letter
+            if sign(current_letter) == +1:
+                superscript = list_of_sheets[i]
+            elif sign(current_letter) == -1:
+                superscript = list_of_sheets[i+1]
+            list_of_pairs.append((subscript, superscript))
+        list_of_triples=[]
+        for pair in list_of_pairs:
+            # fixes off by one error in subscript,
+            # moves sign of exponent to third entry
+            list_of_triples.append([abs(pair[0])-1,pair[1],sign(pair[0])])
+        #each triple is (superscript,subscript,exponent (+/-1))
+        return list_of_triples
+    
+    def lift_of_single_relation_reindex(self, relation, starting_sheet):
+        relationtriples=self.lift_of_single_relation_sub_sup_exp(relation, starting_sheet)
+        relation=[]
+        for triple in relationtriples:
+            (sub, sup, exp) = triple
+            new_subscript= (( (sub + self.F.rank() * (sup - 1)))+1)*exp
+            
+            relation.append(new_subscript)
+        return self.coverF(relation)
+            
+    def lift_relations_sub_sup_exp(self):
+        list_of_lifted_relations = []
+        for rel in self.relations_source:
+            # self.S.degree() is the rank of the symmetric group = number of sheets
+            for i in range(0, self.S.degree()):
+                rel_lifted = self.lift_of_single_relation_sub_sup_exp(rel, i+1)
+                # i+1 because sheets are indexed starting from 1
+                list_of_lifted_relations.append(rel_lifted)
+        
+        return list_of_lifted_relations
+   
+    def lift_relations_reindex(self):
+        list_of_lifted_relations=[]
+        for rel in self.relations_source:
+            # self.S.degree() is the rank of the symmetric group = number of sheets
+            for i in range(0, self.S.degree()):
+                 rel_lifted = self.lift_of_single_relation_reindex(rel, i+1)
+                 # i+1 because sheets are indexed starting from 1
+                 list_of_lifted_relations.append(rel_lifted)
+        
+        return list_of_lifted_relations
+    
+   
+    def all_cover_relations(self):
+        lift_relations=self.lift_relations_reindex()
+        claw_relations=self.surface.claw_relations_reindex()
+        unbranchedtobranched_relations=self.surface.unbranchedtobranched_relations_reindex()
+        return lift_relations + claw_relations + unbranchedtobranched_relations
+    
+    def convert_index(self, triple_sub_sup_exp):
+        (sub, sup, exp) = triple_sub_sup_exp
+        return exp * (sub + self.F.rank() * (sup - 1))         
+                
+            
+    def handlebody_group(self):
+        return self.coverF.quotient(self.all_cover_relations())
+    
+    def check_handlebody_group_is_free(self):
+        group=self.handlebody_group()
+        is_free=True
+        if group.simplified().relations() != ():
+            is_free=False
+            
+        return is_free
+   
+    def handlebody_genus(self):
+        group=self.handlebody_group()
+        Z_factors=group.abelian_invariants()
+        return len(Z_factors)
+    
+    def handlebody_group_unbranched(self):
+        return self.coverF.quotient(self.lift_relations_reindex() + self.surface.claw_relations_reindex())
+    
+            
+class Colored_bridge_trisection:
+    def __init__(self, F: FreeGroup, S: SymmetricGroup, tangles_dict, images_of_generators):
+        """
+        Parameters:
+            tangles_dict: dictionary of trivial tangles; will get assigned the coloring determined by
+                            images_of_generators
+            images_of_generators: list of images of the puncture generators in the symmetric group 
+        """
+        self.F = F
+        self.S = S
+        
+        self.coverF = FreeGroup(self.F.rank() * self.S.degree())
+        
+        self.colored_tangles = {}
+        for (key, value) in tangles_dict.items():
+            self.colored_tangles[key] = Colored_trivial_tangle(self.F, 
+                                                               self.S, 
+                                                               value.relations(), 
+                                                               images_of_generators)
+        self.surface = Colored_punctured_surface(self.F,self.S,images_of_generators)
+        
         return
+    
+    def pi_1_branched_cover(self):
+        all_relations = []
+        for colored_tangle in self.colored_tangles.values():
+            # print(colored_tangle.all_cover_relations())
+            # group of branched cover of handlebody:
+            # print(colored_tangle.coverF.quotient(colored_tangle.all_cover_relations()))
+            all_relations.extend(colored_tangle.all_cover_relations())
+        
+        # print(all_relations)
+        pi_1_branched_cover = self.coverF.quotient(all_relations)
+        return pi_1_branched_cover
+    
+    def pi_1_unbranched_cover(self):
+        all_relations = []
+        for colored_tangle in self.colored_tangles.values():
+            # print(colored_tangle.all_cover_relations())
+            # group of branched cover of handlebody:
+            # print(colored_tangle.coverF.quotient(colored_tangle.all_cover_relations()))
+            all_relations.extend(colored_tangle.surface.claw_relations_reindex())
+            all_relations.extend(colored_tangle.lift_relations_reindex())
+        
+        # print(all_relations)
+        pi_1_branched_cover = self.coverF.quotient(all_relations)
+        return pi_1_branched_cover
+    
+    def pi_1_branched_cover_handlebodies(self):
+        groups_dict={}
+        for (key,value) in self.colored_tangles.items():            
+            groups_dict.update({key:value.handlebody_group()})
+        return groups_dict
+    
+    def pi_1_branched_cover_3_manifolds(self):
+        colored_tangles_list = list(self.colored_tangles)
 
-    def reidemeister_schreier(coloring):
-        for rel in coloring.relations:
-            break # TODO: find the lifts for each relation using the function above
-        # TODO: Continue implementing this function
-        # We can integrate it into the python classes later
-        return
+        consecutive_pairs_keys = [(colored_tangles_list[-1], colored_tangles_list[0])] \
+                                    + [(colored_tangles_list[i], colored_tangles_list[i + 1])
+                                            for i in range(len(list(colored_tangles_list)) - 1)]
+        
+        groups_dict={}
+        for first, second in consecutive_pairs_keys:
+            rels = self.colored_tangles[first].all_cover_relations() + \
+                        self.colored_tangles[second].all_cover_relations()
+            group = self.coverF.quotient(rels)
+            groups_dict[(first, second)]=group
+        return groups_dict
+    
+    def check_pi_1_branched_cover_3_manifolds_free(self):
+        colored_tangles_list = list(self.colored_tangles)
 
+        consecutive_pairs_keys = [(colored_tangles_list[-1], colored_tangles_list[0])] \
+                                    + [(colored_tangles_list[i], colored_tangles_list[i + 1])
+                                            for i in range(len(list(colored_tangles_list)) - 1)]
 
-test_F = FreeGroup(4)
-test_S = SymmetricGroup(3)
-# Suppose S is the symmetric group
-# We can act by elements of the symmetric group by writing
-# S('(1, 2)')(1), the result is 2
-# Another example:
-# test_hom(test_F([1]))(1) is the action of the image of x0 on the number '1'
+        for first, second in consecutive_pairs_keys:
+            rels = self.colored_tangles[first].all_cover_relations() + \
+                        self.colored_tangles[second].all_cover_relations()
+            group = self.coverF.quotient(rels)
+            if group.simplified().relations() != ():
+                print(False)
+                continue
+            print(True)
+            
+    def trisection_parameters_branched_cover(self):
+        groups_dict = self.pi_1_branched_cover_3_manifolds()
+        handlebody_genus_list_4D=[]
+        for (key, group) in groups_dict.items():
+            handlebody_genus_list_4D.append(len(group.abelian_invariants()))
+        
+        handlebody_genus_list_3D=[]
+        for (key,tangle) in self.colored_tangles.items():
+            handlebody_genus_list_3D.append(tangle.handlebody_genus())
+       
+        g=self.surface.genus_branched_cover()
+        match=True
+        for i in range(len(handlebody_genus_list_3D) ):
+            if handlebody_genus_list_3D[i] != g:
+                print('Parameter mismatch: 3D-handlebody genus')
+                print('Handlebody genera:', handlebody_genus_list_3D)
+                print('Core surface genus:', g)
+                match=False
+        if match==True:
+            return [g, handlebody_genus_list_4D]
 
-# Write down list with images of generators of F in the symmetric group
-test_images_of_generators = ['(1, 2)', '(1, 2)', '(2, 3)', '(2, 3)']
+        
 
-# Relation in the handwritting notes from 2021-12-03 that we can
-# test the implementation of the Reidemeister-Schreier algorithm on
-test_relation = test_F([2, -4, 1, 3])
+    
+    def H_1_handlebodies(self):
+        groups_dict=self.pi_1_branched_cover_handlebodies()
+        p_matrix_dict={}
+        H_1_dict={}
+        
+        
+        free_module=span(matrix.identity(rank(self.coverF)).columns())
+        
+        for (key,group) in groups_dict.items():
+            
+            p_matrix_dict.update({key:presentation_matrix(self.coverF,group.relations())})
+        
+        for (key, group) in groups_dict.items():
+            
+            
+            relation_submodule=span(p_matrix_dict[key].columns())
+            H_1_module=free_module/relation_submodule
+            H_1_dict.update({key:H_1_module})
+        return free_module, H_1_dict
+    
+    
+    
+    def inclusion_maps_tripod(self):
+        free_module=self.H_1_handlebodies()[0]
+        groups_dict=self.H_1_handlebodies()[1] 
+        
+        
+        surface_relation_submodule=span(presentation_matrix(self.coverF,self.surface.pi_1_branched().relations()).columns())
+        
+        surface_module=free_module/surface_relation_submodule
+                         
+        
+        
+        #in order to construct morphisms from central surface to each handlebody, 
+        #need the free module presented as a trivial quotient of itself
 
-# Constructing an example coloring to test our functions on
-test_coloring = Coloring(test_F, test_S, [test_relation], test_images_of_generators)
+        zero_vector=[0 for i in range(rank(self.coverF))]
+        trivial_module=free_module.span([zero_vector])
+        free_module_quotient_form=free_module/trivial_module
+        surface_quotient_map=free_module_quotient_form.hom([surface_module(free_module_quotient_form.gen(i))for i in range(rank(self.coverF))])
 
+        
+        inclusion_dict={}
+        
+        for (key,group) in groups_dict.items():
+            quotient_map=free_module_quotient_form.hom([groups_dict[key](free_module_quotient_form.gen(i)) for i in range(rank(self.coverF))])
+            
+            
+            inclusion_map=surface_module.hom([quotient_map(surface_quotient_map.lift(gen)) for gen in surface_module.gens()])
+                  
+            inclusion_dict.update({key:inclusion_map})
+                     
+        return inclusion_dict
+    
+    def lagrangians(self):
+        inclusion_dict = self.inclusion_maps_tripod()
+        lag_dict = {}
+        for (key, value) in inclusion_dict.items():
+            lag_dict.update({key : value.kernel()})
+        return lag_dict
+            
+    
+    def homology_branched_cover(self):
+        inclusion_maps_dict=self.inclusion_maps_tripod()
+        
+        #Cannot compute intersection of submodules of finitely generated modules
+        #To intersect the Lagrangians, re-build each as a submodule of a free module
+        
+        
+        free_module=self.H_1_handlebodies()[0]
+        surface_relation_submodule=span(presentation_matrix(self.coverF,self.surface.pi_1_branched().relations()).columns())
+        
+        surface_module=free_module/surface_relation_submodule
+        surface_free=ZZ^len(surface_module.gens())
+        
+        #in order to construct morphisms from central surface to each handlebody, 
+        #need the free module presented as a trivial quotient of itself
 
+        zero_vector=[0 for i in range(rank(self.coverF))]
+        trivial_module=free_module.span([zero_vector])
+        free_module_quotient_form=free_module/trivial_module
+        surface_quotient_map=free_module_quotient_form.hom([surface_module(free_module_quotient_form.gen(i))for i in range(rank(self.coverF))])
+        
+        
+        #Express basis for each Lagriangian (kernel of inclusion map into handlebody) in terms of surface module basis
+        
+        lag_surface_basis_dict={}
+        
+        for (key,value) in inclusion_maps_dict.items():
+            lag_surface_module_basis=[]
+            for k in value.kernel().gens():
+                lag_surface_module_basis.append(surface_quotient_map(surface_quotient_map.lift(k)))
+                
+            lag=surface_free.span([list(lag_surface_module_basis[i]) for i in range(len(lag_surface_module_basis))],ZZ)
+            lag_surface_basis_dict.update({key:lag})
+            
+            
+        sum_red_blu=lag_surface_basis_dict['red']+lag_surface_basis_dict['blu']
+        intersection_blu_gre=lag_surface_basis_dict['blu'].intersection(lag_surface_basis_dict['gre'])
+        intersection_gre_red=lag_surface_basis_dict['gre'].intersection(lag_surface_basis_dict['red'])
+        
+        intersection_red_blu_gre=lag_surface_basis_dict['red'].intersection(intersection_blu_gre)
+        
+        
+        #https://arxiv.org/pdf/1711.04762.pdf Thm 3.6 p.9
+        #https://arxiv.org/pdf/1901.04734.pdf Thm 2.1 p.3
+        
+        H_1=surface_free/(lag_surface_basis_dict['red']+lag_surface_basis_dict['blu']+lag_surface_basis_dict['gre'])
+        
+        H_2_numerator=lag_surface_basis_dict['gre'].intersection(sum_red_blu)
+        
+        H_2_denominator=intersection_blu_gre+intersection_gre_red
+        
+        
+        H_2=H_2_numerator/H_2_denominator
+        
+        H_3=intersection_red_blu_gre/trivial_module
+        
+        
+        
+        
+        
+        return H_1, H_2, H_3
+    
+    def euler_characteristic(self):
+        
+        #from trisection parameters:
+        tri_param=self.trisection_parameters_branched_cover()
+        ec_tri_param=2+tri_param[0]-(tri_param[1][0]+tri_param[1][1]+tri_param[1][2])
+        
+        #from homology
+        homology_gps=self.homology_branched_cover()
+        
+        rank_list=[]
+        
+        for i in range(3):
+            rank=0
+            abel_inv=homology_gps[i].invariants()
+            for j in abel_inv:
+                if j==0:
+                    rank+=1
+            rank_list.append(rank)
+       
+        ec_homology=2-rank_list[0]+rank_list[1]-rank_list[2]
+        
+        if ec_homology!=ec_tri_param:
+            raise Exception('Euler characteristic mismatch')
+                    
+        
+        return ec_tri_param
+    
+    def intersection_form(self):
+        inclusion_maps_dict=self.inclusion_maps_tripod()
+        
+        #Cannot compute intersection of submodules of finitely generated modules
+        #To intersect the Lagrangians, re-build each as a submodule of a free module
+        
+        
+        free_module=self.H_1_handlebodies()[0]
+        surface_relation_submodule=span(presentation_matrix(self.coverF,self.surface.pi_1_branched().relations()).columns())
+        
+        surface_module=free_module/surface_relation_submodule
+        surface_free=ZZ^len(surface_module.gens())
+        
+        #in order to construct morphisms from central surface to each handlebody, 
+        #need the free module presented as a trivial quotient of itself
 
+        zero_vector=[0 for i in range(rank(self.coverF))]
+        trivial_module=free_module.span([zero_vector])
+        free_module_quotient_form=free_module/trivial_module
+        surface_quotient_map=free_module_quotient_form.hom([surface_module(free_module_quotient_form.gen(i))for i in range(rank(self.coverF))])
+        
+        
+        #Express basis for each Lagriangian (kernel of inclusion map into handlebody) in terms of surface module basis
+        
+        lag_surface_basis_dict={}
+        
+        for (key,value) in inclusion_maps_dict.items():
+            lag_surface_module_basis=[]
+            for k in value.kernel().gens():
+                lag_surface_module_basis.append(surface_quotient_map(surface_quotient_map.lift(k)))
+                
+            lag=surface_free.span([list(lag_surface_module_basis[i]) for i in range(len(lag_surface_module_basis))],ZZ)
+            lag_surface_basis_dict.update({key:lag})
+        
+        
+        H_2=self.homology_branched_cover()[1]
+        H_2_free_part_gens=[]
+        for gen in H_2.gens():
+            if gen.additive_order()==+Infinity:
+                H_2_free_part_gens.append(gen)
+        L_red=lag_surface_basis_dict['red']
+        L_blu=lag_surface_basis_dict['blu']
+        
+        H_2_upstairs_gens=[]
+        for x in H_2_free_part_gens:
+    
+            X=surface_module.zero()
+            for i in range(len(x.lift())):
+                X+=x.lift()[i]*surface_module.gen(i)
+   
+            H_2_upstairs_gens.append(X.lift())
+        
+        #matrix with first columns generators of L_red and final columns generators of L_blu
+        
+        L_red_blu_matrix_tr=matrix(ZZ,[L_red.gen(i) for i in range(len(L_red.gens()))]+[L_blu.gen(i) for i in range(len(L_blu.gens()))])
+        L_red_blu_matrix=L_red_blu_matrix_tr.transpose()
+        
+        L_red_blu_combo=[]
+        #Express generators of H_2 as linear combination of L_red and L_blu generators
+        #Mx=v where v in H_2 and M= L_red_blu_matrix
+        for H_2_gen in H_2_free_part_gens:
+    
+            #L_red_blu_combo.append(L_red_blu_matrix.solve_right(matrix(ZZ,list(H_2_gen.lift())).transpose()))
+            H_2_gen_lift=vector(H_2_gen.lift())
+            soln=solve_Ax_eq_b_int(L_red_blu_matrix,H_2_gen_lift)
+            L_red_blu_combo.append(soln)
+            
+        H_2_L_red_gens_coefficients=[]
+        
+        for i in range(len(L_red_blu_combo)):
+            gen=[]
+            for j in range(len(L_red.gens())):
+                gen.append(L_red_blu_combo[i][j][0])
+            H_2_L_red_gens_coefficients.append(gen)
+       
 
+        H_2_L_red_projections=[]
+        for coef_list in H_2_L_red_gens_coefficients:
+            gen=L_red.zero()
+            for i in range(len(coef_list)):
+                gen+=coef_list[i]*L_red.gen(i)
+            H_2_L_red_projections.append(gen)
+            
+        x_prime_list=[]
+
+        for x in H_2_L_red_projections:
+            x_prime_list.append(self.lift_surface_free_to_free_group(surface_free(x)))
+
+        y_list=H_2_upstairs_gens
+        
+        #Compute intersection form
+        claw_hom=self.surface.claw_collapse_hom()
+        I=matrix(len(H_2_upstairs_gens))
+        M=self.surface.intersection_matrix()
+        for x in range(len(x_prime_list)):
+            for y in range(len(y_list)):
+                I[x,y]=vector(x_prime_list[x])*M*vector(y_list[y])
+               # for i in range(len(x_prime_list[x])):
+                #    for j in range(len(y_list[y])):
+                 #       I[x,y]+=x_prime_list[x][i]*y_list[y][j]*self.surface.intersection_number(claw_hom.image(self.surface.pi_1_unbranched().gens()[i]),claw_hom.image(self.surface.pi_1_unbranched().gens()[j]))
+                    
+        if abs(I.determinant())!=1:
+            raise Exception('Not unimodular')
+        
+        eigenvals=I.eigenvalues()
+        signature=0
+        for v in eigenvals:
+            if v>0:
+                signature+=1
+            if v<0:
+                signature+=-1
+        
+        parity="even"
+        for i in range(len(H_2_upstairs_gens)):
+            if I[i,i]%2!=0:
+                parity="odd"
+                                                                                         
+        return H_2_upstairs_gens, I,signature,parity
+            
+    def lift_surface_free_to_free_group(self,surface_elt):
+        
+        free_module=self.H_1_handlebodies()[0]
+        surface_relation_submodule=span(presentation_matrix(self.coverF,self.surface.pi_1_branched().relations()).columns())
+        
+        surface_module=free_module/surface_relation_submodule
+        surface_free=ZZ^len(surface_module.gens())
+        
+        X=surface_module.zero()
+        for i in range(len(surface_elt)):
+            X+=surface_elt[i]*surface_module.gen(i)
+        return(X.lift())
+
+#Determine the presentation matrix corresponding to the abelianization of a finitely presented group
+def presentation_matrix(F,relations):
+    num_gens=rank(F)
+    num_relns=len(relations)
+    
+    presentation_matrix=[[0 for j in range(num_relns)] for i in range(num_gens)]
+    for j in range(num_relns):
+        reln=relations[j]
+        subscript_list=reln.Tietze()
+    
+        for k in range(len(subscript_list)):
+        
+            presentation_matrix[abs(subscript_list[k])-1][j]+=sgn(subscript_list[k])
+    return matrix(presentation_matrix)  
+                 
+        
+        
+def solve_Ax_eq_b_int(A,b):
+    B,U,V=A.smith_form()
+    y=B.solve_right(U*b)
+    x=V*y
+    return x
+        
+            
 
