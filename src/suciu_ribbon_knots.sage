@@ -10,7 +10,7 @@
 # https://doc.sagemath.org/html/en/reference/groups/sage/groups/finitely_presented.html
 
 from sage.interfaces.gap import get_gap_memory_pool_size, set_gap_memory_pool_size
-set_gap_memory_pool_size(200000000000)
+set_gap_memory_pool_size(800000000000)
 
 def commutator(a, b):
     return a*b*a^(-1)*b^(-1)

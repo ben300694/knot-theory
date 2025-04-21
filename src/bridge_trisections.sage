@@ -157,6 +157,10 @@ class Bridge_Trisection:
     def all_relations(self):
         return self.red_tangle.relations() + self.blu_tangle.relations() + self.gre_tangle.relations()
 
+    # Use the following command to find an isomorphism simplifying the presentation:
+    # hom = tau_2_T_3_5.group().simplification_isomorphism()
+    # We can access the images under the isomorphism via:
+    # hom(tau_2_T_3_5.F.gen(0))
     def group(self):
         """
         Returns a presentation of the fundamental group of the complement of
